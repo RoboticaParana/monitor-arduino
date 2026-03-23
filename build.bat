@@ -11,7 +11,7 @@ REM ================================
 REM CONFIG
 REM ================================
 set PYTHON=C:\Python314\python.exe
-set VERSAO=2.11
+set VERSAO=2.12
 set REPO=RoboticaParana/monitor-arduino
 
 echo.
@@ -84,16 +84,9 @@ echo ================================
 echo ENVIANDO PARA GITHUB...
 echo ================================
 
-git add .
 
-git diff --cached --quiet
-if %errorlevel%==0 (
-    echo Nenhuma alteracao detectada, forçando commit...
-    git commit --allow-empty -m "Versao %VERSAO%"
-) else (
-    git commit -m "Versao %VERSAO%"
-)
-
+git add -A
+git commit --allow-empty -m "Versao %VERSAO%"
 git push
 
 REM ================================
