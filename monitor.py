@@ -107,9 +107,9 @@ def popup(titulo, msg, confirm=False):
     root.withdraw()
 
     if confirm:
-        r = messagebox.askyesno(titulo, msg)
+        res = messagebox.askyesno(titulo, msg)
         root.destroy()
-        return r
+        return res
     else:
         messagebox.showinfo(titulo, msg)
         root.destroy()
@@ -149,9 +149,6 @@ def baixar_update(url):
     except Exception as e:
         popup("Erro", f"Erro ao baixar atualização\n{e}")
 
-# ===============================
-# UPDATER SEGURO (SEM CORRUPÇÃO)
-# ===============================
 def iniciar_updater(novo):
     atual = sys.executable
     pasta = os.path.dirname(atual)
@@ -160,28 +157,16 @@ def iniciar_updater(novo):
     with open(updater, "w") as f:
         f.write(f"""
 @echo off
-echo Atualizando monitor...
-
 timeout /t 5 >nul
-
 taskkill /f /im monitor.exe
-
 timeout /t 5 >nul
-
 cd /d "{pasta}"
-
 ren monitor.exe monitor_old.exe
-
 move /Y "{novo}" monitor.exe
-
 timeout /t 3 >nul
-
 start "" monitor.exe
-
 timeout /t 2 >nul
-
 del monitor_old.exe
-
 del "%~f0"
 """)
 
@@ -197,7 +182,6 @@ def monitor():
     while True:
         atual = get_arduinos()
 
-        # CONECTOU
         for porta, dados in atual.items():
             if porta not in anterior:
                 agora = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
@@ -212,7 +196,6 @@ def monitor():
                     f"- IP:{ip} - LOC:{geo}"
                 )
 
-        # UPLOAD
         for porta in anterior:
             if porta not in atual:
                 time.sleep(1)
