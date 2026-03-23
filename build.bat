@@ -85,7 +85,9 @@ echo ENVIANDO PARA GITHUB...
 echo ================================
 
 
-git add -A
+git add monitor.py
+git add version.json
+git add README.md
 git commit --allow-empty -m "Versao %VERSAO%"
 git push
 
