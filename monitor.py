@@ -37,7 +37,7 @@ def resource_path(relative_path):
 # ===============================
 # CONFIG
 # ===============================
-VERSION = "2.11"
+VERSION = "2.12"
 UPDATE_URL = "https://raw.githubusercontent.com/RoboticaParana/monitor-arduino/main/version.json"
 
 PASTA = r"C:\ProgramData\RoboticsMonitor"
