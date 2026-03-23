@@ -74,8 +74,21 @@ echo ================================
 echo ENVIANDO PARA GITHUB
 echo ================================
 
+echo.
+echo ================================
+echo COMMIT FORCADO GITHUB
+echo ================================
+
 git add .
-git commit -m "Versao %VERSAO%"
+
+git diff --cached --quiet
+if %errorlevel%==0 (
+    echo Nenhuma alteracao detectada, forçando commit...
+    git commit --allow-empty -m "Versao %VERSAO%"
+) else (
+    git commit -m "Versao %VERSAO%"
+)
+
 git push
 
 REM ================================
