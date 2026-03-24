@@ -1,4 +1,4 @@
 {
-  "version": "2.24",
-  "url": "https://github.com/RoboticaParana/monitor-arduino/releases/download/v2.24/monitor.exe"
+  "version": "dist/",
+  "url": "https://github.com/RoboticaParana/monitor-arduino/releases/download/vdist//monitor.exe"
 }
