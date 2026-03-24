@@ -1,0 +1,21 @@
+# IGNORAR TUDO
+*
+
+# EXCEÇÕES IMPORTANTES
+!.gitignore
+!version.json
+!README.md
+
+# IGNORAR BUILDS
+build/
+dist/
+Output/
+__pycache__/
+*.spec
+
+# IGNORAR DESENVOLVIMENTO
+*.py
+*.bat
+*.iss
+*.ico
+*.png
