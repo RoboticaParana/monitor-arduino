@@ -1,14 +1,17 @@
 @echo off
 title GERADOR DO AGENTE MESTRE - MONITOR ARDUINO
 color 0B
+
+:: Garante que o terminal entenda acentos (Robótica)
 chcp 65001 >nul
+
 setlocal EnableDelayedExpansion
 cd /d %~dp0
 
 REM ================================
 REM CONFIGURAÇÃO
 REM ================================
-:: Tenta usar o comando 'python' global do sistema
+:: Usando o comando python que funcionou no seu log
 set PYTHON=python
 set INNO="C:\Users\Cleiton\AppData\Local\Programs\Inno Setup 6\ISCC.exe"
 set REPO=RoboticaParana/monitor-arduino
@@ -27,77 +30,115 @@ set VERSAO_ATUAL=!VERSAO_ATUAL:"=!
 set VERSAO_ATUAL=!VERSAO_ATUAL: =!
 
 echo ========================================
-echo VERSAO ATUAL: !VERSAO_ATUAL!
+echo VERSAO ATUAL NO PROJETO: !VERSAO_ATUAL!
 echo ========================================
 
-set /p VERSAO=Digite a NOVA VERSAO: 
-if "!VERSAO!"=="" exit
-set /p INTERVALO=Intervalo (segundos) [60]: 
+REM ================================
+REM ENTRADA DE DADOS
+REM ================================
+set /p VERSAO=Digite a NOVA VERSAO (ex: 3.0): 
+if "!VERSAO!"=="" (echo Versao invalida! & pause & exit)
+
+set /p INTERVALO=Intervalo de checagem em segundos [60]: 
 if "!INTERVALO!"=="" set INTERVALO=60
 
 echo.
 echo ===== INICIANDO COMPILAÇÃO v!VERSAO! =====
 
-REM ATUALIZAR SCRIPTS
+REM ================================
+REM ATUALIZAR SCRIPTS (PowerShell)
+REM ================================
 powershell -Command "(Get-Content monitor.py) -replace 'VERSION = \".*\"', 'VERSION = \"!VERSAO!\"' | Set-Content monitor.py"
 powershell -Command "(Get-Content monitor.py) -replace 'UPDATE_INTERVAL = .*', 'UPDATE_INTERVAL = !INTERVALO!' | Set-Content monitor.py"
 
-echo { "version": "!VERSAO!", "url": "https://github.com/!REPO!/releases/download/v!VERSAO!/monitor.exe" }>version.json
+:: Gera o version.json (O link aponta para o monitor.exe direto)
+echo {>version.json
+echo   "version": "!VERSAO!",>>version.json
+echo   "url": "https://github.com/!REPO!/releases/download/v!VERSAO!/monitor.exe">>version.json
+echo }>>version.json
 
+:: Atualiza o script do instalador Inno Setup
 powershell -Command "(Get-Content setup.iss) -replace 'AppVersion=.*', 'AppVersion=!VERSAO!' | Set-Content setup.iss"
 powershell -Command "(Get-Content setup.iss) -replace 'OutputBaseFilename=.*', 'OutputBaseFilename=Instalador_Monitor_v!VERSAO!' | Set-Content setup.iss"
 
 REM ================================
-REM CORREÇÃO DO GIT
+REM LIMPEZA E SYNC GIT (Anti-Erro)
 REM ================================
-if not exist .git (
-    echo Inicializando repositório Git...
-    git init
-    git remote add origin https://github.com/!REPO!.git
-)
+echo ===== SINCRONIZANDO REPOSITÓRIO =====
+:: Cancela qualquer rebase travado de antes
+git rebase --abort >nul 2>&1
+:: Garante que a branch se chama main
+git branch -M main >nul 2>&1
 
-echo ===== SINCRONIZANDO =====
 git add .
-git commit -m "Preparando v!VERSAO!" >nul 2>&1
-:: O pull só funciona se já houver algo no GitHub, se der erro aqui ele ignora e segue
+git commit -m "Preparando Release v!VERSAO!" >nul 2>&1
+:: O pull tenta baixar novidades, se falhar ele ignora e segue
 git pull origin main --rebase >nul 2>&1
 
-echo Limpando pastas...
-rmdir /s /q build dist 2>nul
+echo Limpando builds antigos...
+rmdir /s /q build 2>nul
+rmdir /s /q dist 2>nul
 if not exist Output mkdir Output
 
 REM ================================
-REM BUILD EXE
+REM BUILD DO EXECUTÁVEL (PyInstaller)
 REM ================================
 echo ===== GERANDO EXE (Agente) =====
 %PYTHON% -m PyInstaller --onefile --noconsole --uac-admin --clean --icon=mascote.ico --add-data "mascote.ico;." monitor.py
 
 if not exist dist\monitor.exe (
-    echo [ERRO] O PyInstaller falhou! Tentando comando alternativo...
-    py -m PyInstaller --onefile --noconsole --uac-admin --clean --icon=mascote.ico --add-data "mascote.ico;." monitor.py
-)
-
-if not exist dist\monitor.exe (
-    echo [ERRO CRITICO] Python ou PyInstaller nao encontrados.
+    echo [ERRO] O PyInstaller falhou!
     pause
     exit
 )
 
 REM ================================
-REM INSTALADOR E GITHUB
+REM GERAR INSTALADOR (Inno Setup)
 REM ================================
+echo ===== GERANDO INSTALADOR MESTRE =====
 if exist %INNO% (
-    echo ===== GERANDO INSTALADOR =====
     %INNO% setup.iss
+) else (
+    echo [ERRO] Inno Setup nao encontrado em %INNO%
+    pause
+    exit
 )
 
-echo ===== ENVIANDO PARA GITHUB =====
+REM ================================
+REM GITHUB RELEASE (Anti-Erro)
+REM ================================
+echo ===== PUBLICANDO NO GITHUB =====
 git add .
-git commit -m "Release v!VERSAO!"
-git push origin main
+git commit -m "Release Final v!VERSAO!" >nul 2>&1
+:: Envia forçado para garantir que a main do PC e do GitHub sejam iguais
+git push origin main --force
 
 echo ===== CRIANDO RELEASE =====
-gh release create v!VERSAO! dist\monitor.exe Output\Instalador_Monitor_v!VERSAO!.exe --title "v!VERSAO!" --notes "Agente Mestre"
+where gh >nul 2>nul
+if %ERRORLEVEL% equ 0 (
+    echo Verificando e deletando release antiga v!VERSAO! se existir...
+    gh release delete v!VERSAO! -y 2>nul
+    timeout /t 2 > nul
+    
+    echo Criando nova release v!VERSAO!...
+    gh release create v!VERSAO! ^
+    dist\monitor.exe ^
+    Output\Instalador_Monitor_v!VERSAO!.exe ^
+    --title "v!VERSAO!" --notes "Agente Mestre - Instalação única. Intervalo: !INTERVALO!s"
+) else (
+    echo [AVISO] GitHub CLI (gh) nao encontrado. Release nao criada automaticamente.
+)
 
-echo Sucesso!
+REM ================================
+REM BACKUP DRIVE
+REM ================================
+if exist "!DESTINO_DRIVE!" (
+    echo ===== REALIZANDO BACKUP NO DRIVE =====
+    robocopy "%cd%" "!DESTINO_DRIVE!" /E /XD build dist __pycache__ .git >nul
+)
+
+echo.
+echo ========================================
+echo BUILD v!VERSAO! FINALIZADO COM SUCESSO!
+echo ========================================
 pause

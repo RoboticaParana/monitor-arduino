@@ -1,1 +1,4 @@
-{ "version": "3.0", "url": "https://github.com/RoboticaParana/monitor-arduino/releases/download/v3.0/monitor.exe" }
+{
+  "version": "3.0",
+  "url": "https://github.com/RoboticaParana/monitor-arduino/releases/download/v3.0/monitor.exe"
+}
