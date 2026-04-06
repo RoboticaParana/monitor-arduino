@@ -5,8 +5,8 @@ a = Analysis(
     ['monitor.py'],
     pathex=[],
     binaries=[],
-    datas=[('mascote.png', '.')],
-    hiddenimports=['serial', 'serial.tools', 'serial.tools.list_ports'],
+    datas=[('mascote.ico', '.')],
+    hiddenimports=[],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
@@ -35,4 +35,6 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    uac_admin=True,
+    icon=['mascote.ico'],
 )
