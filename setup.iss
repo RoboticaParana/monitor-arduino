@@ -1,12 +1,12 @@
 [Setup]
 AppId={{8B32145A-7C21-4E6E-A52D-1234567890ABC}
 AppName=Monitor Arduino Agente
-AppVersion=4.5
+AppVersion=4.6
 DefaultDirName=C:\ProgramData\MonitorArduino
 DisableDirPage=yes
 PrivilegesRequired=admin 
 OutputDir=Output
-OutputBaseFilename=Instalador_Monitor_v4.5
+OutputBaseFilename=Instalador_Monitor_v4.6
 SetupIconFile=mascote.ico
 Compression=lzma
 SolidCompression=yes

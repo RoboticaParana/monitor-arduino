@@ -1,5 +1,5 @@
 @echo off
-title GERADOR AGENTE MESTRE v4.4
+title GERADOR AGENTE MESTRE v4.5
 color 0B
 chcp 65001 >nul
 setlocal EnableDelayedExpansion
@@ -9,7 +9,7 @@ set PYTHON=python
 set INNO="C:\Users\Cleiton\AppData\Local\Programs\Inno Setup 6\ISCC.exe"
 set REPO=RoboticaParana/monitor-arduino
 
-set /p VERSAO=Digite a NOVA VERSAO (ex: 4.4): 
+set /p VERSAO=Digite a NOVA VERSAO (ex: 4.5): 
 if "!VERSAO!"=="" exit
 
 echo ===== 1. ATUALIZANDO ARQUIVOS =====
@@ -44,7 +44,7 @@ git push origin :refs/tags/v!VERSAO! >nul 2>&1
 gh release delete v!VERSAO! -y >nul 2>&1
 
 echo Enviando para o GitHub...
-gh release create v!VERSAO! "./dist/monitor.exe" "./Output/Instalador_Monitor_v!VERSAO!.exe" --title "v!VERSAO!" --notes "Versao 4.4 - Correcao de Foco e Senha" --latest
+gh release create v!VERSAO! "./dist/monitor.exe" "./Output/Instalador_Monitor_v!VERSAO!.exe" --title "v!VERSAO!" --notes "Versao 4.5 - Fix Janela de Senha" --latest
 
 echo FIM DO PROCESSO v!VERSAO!.
 pause
