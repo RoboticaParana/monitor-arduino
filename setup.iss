@@ -1,6 +1,6 @@
 [Setup]
 AppId={{8B32145A-7C21-4E6E-A52D-1234567890ABC}
-AppName=Monitor Arduino Agente
+AppName=Monitor Arduino
 AppVersion=3.4
 DefaultDirName=C:\ProgramData\MonitorArduino
 DisableDirPage=yes
@@ -10,10 +10,10 @@ OutputBaseFilename=Instalador_Monitor_v3.4
 SetupIconFile=mascote.ico
 Compression=lzma
 SolidCompression=yes
-WizardStyle=modern
 
 [Files]
-Source: "dist\monitor.exe"; DestDir: "{app}"; Flags: ignoreversion
+; Pega todos os arquivos da pasta gerada pelo PyInstaller
+Source: "dist\monitor\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "mascote.ico"; DestDir: "{app}"; Flags: ignoreversion
 
 [Registry]
