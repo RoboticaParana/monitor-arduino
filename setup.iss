@@ -1,12 +1,12 @@
 [Setup]
 AppId={{8B32145A-7C21-4E6E-A52D-1234567890ABC}
 AppName=Monitor Arduino
-AppVersion=4.0
+AppVersion=4.1
 DefaultDirName=C:\ProgramData\MonitorArduino
 DisableDirPage=yes
 PrivilegesRequired=admin
 OutputDir=Output
-OutputBaseFilename=Instalador_Monitor_v4.0
+OutputBaseFilename=Instalador_Monitor_v4.1
 SetupIconFile=mascote.ico
 Compression=lzma
 SolidCompression=yes

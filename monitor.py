@@ -12,7 +12,7 @@ import pystray # pip install pystray
 # ==========================================
 # CONFIGURAÇÕES
 # ==========================================
-VERSION = "4.0"
+VERSION = "4.1"
 BASE_DIR = os.path.join(os.environ.get('ProgramData', 'C:\\ProgramData'), "MonitorArduino")
 LOG_FILE = os.path.join(BASE_DIR, "log_arduino.txt")
 ICON_PATH = os.path.join(BASE_DIR, "mascote.ico")
