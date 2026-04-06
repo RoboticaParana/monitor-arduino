@@ -1,5 +1,5 @@
 @echo off
-title GERADOR AGENTE MESTRE v4.3
+title GERADOR AGENTE MESTRE v4.4
 color 0B
 chcp 65001 >nul
 setlocal EnableDelayedExpansion
@@ -9,7 +9,7 @@ set PYTHON=python
 set INNO="C:\Users\Cleiton\AppData\Local\Programs\Inno Setup 6\ISCC.exe"
 set REPO=RoboticaParana/monitor-arduino
 
-set /p VERSAO=Digite a NOVA VERSAO (ex: 4.3): 
+set /p VERSAO=Digite a NOVA VERSAO (ex: 4.4): 
 if "!VERSAO!"=="" exit
 
 echo ===== 1. ATUALIZANDO ARQUIVOS =====
@@ -18,9 +18,8 @@ echo { "version": "!VERSAO!", "url": "https://github.com/!REPO!/releases/downloa
 powershell -Command "(Get-Content setup.iss) -replace 'AppVersion=.*', 'AppVersion=!VERSAO!' | Set-Content setup.iss"
 powershell -Command "(Get-Content setup.iss) -replace 'OutputBaseFilename=.*', 'OutputBaseFilename=Instalador_Monitor_v!VERSAO!' | Set-Content setup.iss"
 
-echo ===== 2. COMPILANDO (SEM UAC-ADMIN) =====
+echo ===== 2. COMPILANDO =====
 rmdir /s /q build dist 2>nul
-:: Note que nao usamos mais --uac-admin aqui para evitar o popup de senha no aluno
 %PYTHON% -m PyInstaller --onedir --noconsole --clean ^
 --icon=mascote.ico --add-data "mascote.ico;." ^
 --hidden-import=pyserial --hidden-import=pystray --hidden-import=PIL --hidden-import=requests --hidden-import=tkinter ^
@@ -45,7 +44,7 @@ git push origin :refs/tags/v!VERSAO! >nul 2>&1
 gh release delete v!VERSAO! -y >nul 2>&1
 
 echo Enviando para o GitHub...
-gh release create v!VERSAO! "./dist/monitor.exe" "./Output/Instalador_Monitor_v!VERSAO!.exe" --title "v!VERSAO!" --notes "Versao 4.3 - Geolocalizacao e Seguranca" --latest
+gh release create v!VERSAO! "./dist/monitor.exe" "./Output/Instalador_Monitor_v!VERSAO!.exe" --title "v!VERSAO!" --notes "Versao 4.4 - Correcao de Foco e Senha" --latest
 
-echo FIM DO PROCESSO.
+echo FIM DO PROCESSO v!VERSAO!.
 pause

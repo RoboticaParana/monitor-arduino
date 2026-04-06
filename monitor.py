@@ -15,8 +15,8 @@ from tkinter import simpledialog
 # ==========================================
 # CONFIGURAÇÕES TÉCNICAS
 # ==========================================
-VERSION = "4.4"
-ADMIN_PASS = "1234"  # Altere para a senha que desejar
+VERSION = "4.5"
+ADMIN_PASS = "1234"  # Altere para a sua senha
 UPDATE_INTERVAL = 60
 GITHUB_REPO = "RoboticaParana/monitor-arduino"
 VERSION_URL = f"https://raw.githubusercontent.com/{GITHUB_REPO}/main/version.json"
@@ -39,7 +39,6 @@ def registrar_log(mensagem):
         pass
 
 def get_geo():
-    """ Obtém localização aproximada via IP """
     try:
         r = requests.get("http://ip-api.com/json/", timeout=5).json()
         if r.get('status') == 'success':
@@ -49,16 +48,10 @@ def get_geo():
         return "Localizacao: Offline"
 
 def verificar_fabricante(vid):
-    """ Identifica se o hardware é oficial Arduino ou Genérico """
-    # 0x2341 (9025) é o ID oficial da Arduino SA
-    if vid == 0x2341 or vid == 9025:
-        return "ORIGINAL (Arduino SA)"
-    elif vid == 0x1A86:
-        return "GENERICO (CH340/CH341)"
-    elif vid == 0x0403:
-        return "GENERICO (FTDI)"
-    else:
-        return "DESCONHECIDO"
+    if vid == 0x2341 or vid == 9025: return "ORIGINAL (Arduino SA)"
+    if vid == 0x1A86: return "GENERICO (CH340/CH341)"
+    if vid == 0x0403: return "GENERICO (FTDI)"
+    return "DESCONHECIDO"
 
 def baixar_e_substituir(url):
     try:
@@ -106,7 +99,6 @@ def loop_principal():
             portas_atuais = serial.tools.list_ports.comports()
             dispositivos_agora = {p.device for p in portas_atuais}
 
-            # Identificar novas conexões com detalhes ricos
             novas = dispositivos_agora - portas_conhecidas
             for porta in novas:
                 p = next(it for it in portas_atuais if it.device == porta)
@@ -131,17 +123,25 @@ def loop_principal():
             time.sleep(10)
 
 def solicitar_senha_para_sair(icon, item):
-    """ Janela de senha para impedir que o aluno feche """
+    """ Janela de senha com FOCO FORÇADO """
     root = tk.Tk()
-    root.withdraw()
-    root.attributes("-topmost", True)
-    resposta = simpledialog.askstring("Seguranca", "Senha do Administrador:", show='*')
-    if resposta == ADMIN_PASS:
-        icon.stop()
-        os._exit(0)
-    else:
-        registrar_log("Tentativa de fechamento nao autorizada.")
-    root.destroy()
+    root.withdraw() 
+    root.attributes("-topmost", True) # Garante que fique na frente de tudo
+    
+    # Pequeno delay para garantir que o Windows processe a janela antes do foco
+    root.after(100, lambda: root.focus_force()) 
+    
+    senha = simpledialog.askstring("Segurança", "Digite a senha de Administrador:", show="*", parent=root)
+    
+    if senha is not None: # Se não clicou em Cancelar
+        if senha == ADMIN_PASS:
+            icon.stop()
+            root.destroy()
+            os._exit(0)
+        else:
+            registrar_log("Tentativa de fechamento com senha incorreta.")
+    
+    root.destroy() # Fecha a instância do Tkinter ao terminar ou cancelar
 
 def iniciar_icone():
     try:
