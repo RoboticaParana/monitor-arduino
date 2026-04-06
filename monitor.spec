@@ -6,7 +6,7 @@ a = Analysis(
     pathex=[],
     binaries=[],
     datas=[('mascote.ico', '.')],
-    hiddenimports=['pyserial', 'pystray', 'PIL', 'requests'],
+    hiddenimports=['pyserial', 'pystray', 'PIL', 'requests', 'tkinter'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
@@ -32,7 +32,6 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    uac_admin=True,
     icon=['mascote.ico'],
 )
 coll = COLLECT(
