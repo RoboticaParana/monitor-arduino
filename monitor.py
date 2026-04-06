@@ -1,82 +1,116 @@
-import ctypes
 import os
-import sys
 import time
-import threading
+import json
 import requests
 import subprocess
-import pystray
-import shutil
-import random
-from PIL import Image
-from pystray import MenuItem as item
+import sys
+import serial.tools.list_ports
+from datetime import datetime
 
-# Configurações automáticas (O build.bat altera estas linhas)
-VERSION = "3.7"
-UPDATE_INTERVAL = 30
-URL_JSON = "https://raw.githubusercontent.com/RoboticaParana/monitor-arduino/main/version.json"
+# ==========================================
+# CONFIGURAÇÕES TÉCNICAS
+# ==========================================
+VERSION = "3.8"  # O build.bat altera isso automaticamente
+UPDATE_INTERVAL = 60
+GITHUB_REPO = "RoboticaParana/monitor-arduino"
+VERSION_URL = f"https://raw.githubusercontent.com/{GITHUB_REPO}/main/version.json"
 
-# Pasta global para permitir atualização sem senha de admin após a 1ª vez
-BASE_DIR = r"C:\ProgramData\MonitorArduino"
+# Caminhos de Sistema
+BASE_DIR = os.path.join(os.environ.get('ProgramData', 'C:\\ProgramData'), "MonitorArduino")
 EXE_PATH = os.path.join(BASE_DIR, "monitor.exe")
-ICO_PATH = os.path.join(BASE_DIR, "mascote.ico")
+LOG_FILE = os.path.join(BASE_DIR, "log_arduino.txt")
+
+def registrar_log(mensagem):
+    """ Grava eventos no arquivo de log com flush forçado para o HD """
+    try:
+        if not os.path.exists(BASE_DIR):
+            os.makedirs(BASE_DIR)
+        
+        timestamp = datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+        with open(LOG_FILE, "a", encoding='utf-8') as f:
+            f.write(f"[{timestamp}] v{VERSION} - {mensagem}\n")
+            f.flush()  # Garante a gravação imediata
+            os.fsync(f.fileno()) # Força o sistema operacional a salvar
+    except Exception as e:
+        print(f"Erro ao gravar log: {e}")
+
+def verificar_atualizacao():
+    """ Checa se existe nova versão no GitHub """
+    try:
+        response = requests.get(VERSION_URL, timeout=10)
+        data = response.json()
+        nova_versao = data.get("version")
+        
+        if nova_versao and nova_versao != VERSION:
+            registrar_log(f"Nova versão detectada: {nova_versao}. Iniciando update...")
+            baixar_e_substituir(data.get("url"))
+    except Exception as e:
+        pass # Silencioso para não atrapalhar o log do Arduino
 
 def baixar_e_substituir(url):
+    """ Baixa o novo executável e roda o script de troca """
     try:
-        if not os.path.exists(BASE_DIR): os.makedirs(BASE_DIR)
         temp_exe = os.path.join(BASE_DIR, "update_temp.exe")
-        
-        # Download da nova versão
         r = requests.get(url, stream=True, timeout=60)
-        r.raise_for_status()
         with open(temp_exe, "wb") as f:
-            for chunk in r.iter_content(8192): f.write(chunk)
+            for chunk in r.iter_content(8192):
+                f.write(chunk)
         
-        # Verifica se o arquivo baixado é válido (mínimo 1MB)
-        if os.path.getsize(temp_exe) < 1000000: return
-
-        # BAT para matar o processo, esperar a limpeza de DLLs e substituir
         bat_path = os.path.join(BASE_DIR, "update.bat")
         with open(bat_path, "w") as f:
             f.write(f'@echo off\n')
-            f.write(f'title ATUALIZANDO MONITOR AGENTE...\n')
             f.write(f'taskkill /f /im monitor.exe > nul 2>&1\n')
-            # Espera 5 segundos para o Windows liberar as DLLs do Python da memória
-            f.write(f'timeout /t 5 /nobreak > nul\n') 
+            f.write(f'timeout /t 3 /nobreak > nul\n')
             f.write(f'move /y "{temp_exe}" "{EXE_PATH}"\n')
             f.write(f'start "" "{EXE_PATH}"\n')
             f.write(f'del "%~f0"\n')
         
-        # Executa o BAT e fecha o programa atual
         subprocess.Popen([bat_path], shell=True)
-        os._exit(0)
+        sys.exit(0)
     except Exception as e:
-        pass
+        registrar_log(f"Falha no download da atualização: {e}")
 
-def loop_update():
+def monitorar_portas():
+    """ Verifica se há novas placas conectadas """
+    portas_conhecidas = set()
+    
+    # Primeira leitura para ignorar o que já estava plugado ao ligar
+    for p in serial.tools.list_ports.comports():
+        portas_conhecidas.add(p.device)
+
+    registrar_log("=== MONITORAMENTO INICIADO ===")
+
     while True:
         try:
-            # Cache buster para evitar pegar versão antiga do cache do GitHub
-            r = requests.get(f"{URL_JSON}?c={random.randint(1,99999)}", timeout=15)
-            dados = r.json()
-            if dados["version"] != VERSION:
-                baixar_e_substituir(dados["url"])
-        except:
-            pass
-        time.sleep(UPDATE_INTERVAL)
+            portas_atuais = serial.tools.list_ports.comports()
+            dispositivos_agora = {p.device for p in portas_atuais}
 
-def criar_icone():
-    try: 
-        img = Image.open(ICO_PATH)
-    except: 
-        img = Image.new("RGB", (64, 64), (0, 128, 0))
+            # Detectar novos dispositivos
+            novos = dispositivos_agora - portas_conhecidas
+            for porta in novos:
+                # Busca detalhes da porta nova
+                detalhes = next(p for p in portas_atuais if p.device == porta)
+                info = (f"PLACA CONECTADA: {detalhes.device} | "
+                        f"Hardware: {detalhes.hwid} | "
+                        f"Desc: {detalhes.description}")
+                registrar_log(info)
 
-    icon = pystray.Icon("Monitor", img, f"Monitor v{VERSION}", 
-                        menu=(item(f"Versão {VERSION}", lambda: None, enabled=False),
-                              item("Sair", lambda icon, item: (icon.stop(), os._exit(0)))))
-    
-    threading.Thread(target=loop_update, daemon=True).start()
-    icon.run()
+            # Detectar dispositivos removidos
+            removidos = portas_conhecidas - dispositivos_agora
+            for porta in removidos:
+                registrar_log(f"PLACA DESCONECTADA: {porta}")
+
+            portas_conhecidas = dispositivos_agora
+            
+            # Checar atualização a cada ciclo (definido pelo intervalo)
+            verificar_atualizacao()
+            
+            time.sleep(5) # Verifica portas a cada 5 segundos
+        except Exception as e:
+            registrar_log(f"Erro no loop de monitoramento: {e}")
+            time.sleep(10)
 
 if __name__ == "__main__":
-    criar_icone()
+    # Espera um pouco ao iniciar para o Windows carregar drivers USB
+    time.sleep(2)
+    monitorar_portas()
