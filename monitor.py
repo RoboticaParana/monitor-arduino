@@ -12,7 +12,7 @@ from PIL import Image
 from pystray import MenuItem as item
 
 # Configurações automáticas
-VERSION = "3.1"
+VERSION = "3.2"
 UPDATE_INTERVAL = 60
 URL_JSON = "https://raw.githubusercontent.com/RoboticaParana/monitor-arduino/main/version.json"
 
