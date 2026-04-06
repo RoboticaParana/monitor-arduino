@@ -15,7 +15,7 @@ from tkinter import simpledialog
 # ==========================================
 # CONFIGURAÇÕES TÉCNICAS
 # ==========================================
-VERSION = "4.3"
+VERSION = "4.4"
 ADMIN_PASS = "1234"  # Altere para a senha que desejar
 UPDATE_INTERVAL = 60
 GITHUB_REPO = "RoboticaParana/monitor-arduino"
