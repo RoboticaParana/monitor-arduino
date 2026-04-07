@@ -15,7 +15,7 @@ import ctypes
 # ==========================================
 # CONFIGURAÇÕES TÉCNICAS
 # ==========================================
-VERSION = "4.9"
+VERSION = "5.0"
 ADMIN_PASS = "robotic@p@r@n@" 
 UPDATE_INTERVAL = 60
 GITHUB_REPO = "RoboticaParana/monitor-arduino"
@@ -27,7 +27,6 @@ LOG_FILE = os.path.join(BASE_DIR, "log_arduino.txt")
 ICON_PATH = os.path.join(BASE_DIR, "mascote.ico")
 
 def tornar_oculto(caminho):
-    """ Define o atributo de arquivo oculto no Windows """
     try:
         FILE_ATTRIBUTE_HIDDEN = 0x02
         ctypes.windll.kernel32.SetFileAttributesW(caminho, FILE_ATTRIBUTE_HIDDEN)
@@ -37,14 +36,11 @@ def registrar_log(mensagem):
     try:
         if not os.path.exists(BASE_DIR): os.makedirs(BASE_DIR)
         timestamp = datetime.now().strftime('%d/%m/%Y %H:%M:%S')
-        
-        # Abre, grava e fecha imediatamente para evitar bloqueio de edição manual
         with open(LOG_FILE, "a", encoding='utf-8') as f:
             f.write(f"[{timestamp}] {mensagem}\n")
             f.flush()
             os.fsync(f.fileno())
-        
-        tornar_oculto(LOG_FILE) # Garante que continue oculto
+        tornar_oculto(LOG_FILE)
     except: pass
 
 def get_geo():
@@ -104,10 +100,7 @@ def loop_principal():
 def criar_janela_senha(icon):
     def validar(event=None):
         if ent.get() == ADMIN_PASS:
-            root.quit()
-            root.destroy()
-            icon.stop()
-            os._exit(0)
+            root.quit(); root.destroy(); icon.stop(); os._exit(0)
         else:
             registrar_log("Tentativa de fechamento: Senha incorreta.")
             root.destroy()
@@ -115,25 +108,19 @@ def criar_janela_senha(icon):
     root = tk.Tk()
     root.title("Segurança Agente B1n0")
     root.geometry("300x130")
-    root.resizable(False, False)
-    root.attributes("-topmost", True)
-    
-    screen_width, screen_height = root.winfo_screenwidth(), root.winfo_screenheight()
-    root.geometry(f"300x130+{(screen_width // 2) - 150}+{(screen_height // 2) - 65}")
+    root.resizable(False, False); root.attributes("-topmost", True)
+    sw, sh = root.winfo_screenwidth(), root.winfo_screenheight()
+    root.geometry(f"300x130+{(sw // 2) - 150}+{(sh // 2) - 65}")
 
     tk.Label(root, text="Senha de Administrador:", pady=10).pack()
-    ent = tk.Entry(root, show="*", width=25)
-    ent.pack()
+    ent = tk.Entry(root, show="*", width=25); ent.pack()
     ent.bind('<Return>', validar)
     
-    btn_frame = tk.Frame(root, pady=10)
-    btn_frame.pack()
+    btn_frame = tk.Frame(root, pady=10); btn_frame.pack()
     tk.Button(btn_frame, text="Confirmar", command=validar, width=10).pack(side=tk.LEFT, padx=5)
     tk.Button(btn_frame, text="Cancelar", command=root.destroy, width=10).pack(side=tk.LEFT, padx=5)
 
-    ent.focus_set()
-    root.after(200, lambda: root.focus_force())
-    root.mainloop()
+    ent.focus_set(); root.after(200, lambda: root.focus_force()); root.mainloop()
 
 def acao_fechar(icon, item):
     threading.Thread(target=criar_janela_senha, args=(icon,), daemon=True).start()

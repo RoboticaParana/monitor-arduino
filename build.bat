@@ -6,8 +6,11 @@ setlocal EnableDelayedExpansion
 cd /d %~dp0
 
 set PYTHON=python
-set INNO="C:\Users\Cleiton\AppData\Local\Programs\Inno Setup 6\ISCC.exe"
+set INNO="C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
 set REPO=RoboticaParana/monitor-arduino
+
+:: Caso o Inno esteja em outro caminho comum
+if not exist %INNO% set INNO="C:\Users\%USERNAME%\AppData\Local\Programs\Inno Setup 6\ISCC.exe"
 
 set /p VERSAO=Digite a NOVA VERSAO (ex: 4.7): 
 if "!VERSAO!"=="" exit
@@ -32,8 +35,12 @@ if not exist dist\monitor\monitor.exe (
 )
 copy /y "dist\monitor\monitor.exe" "dist\monitor.exe" >nul
 
-echo ===== 3. GERANDO INSTALADOR =====
-if exist %INNO% (%INNO% setup.iss)
+echo ===== 3. GERANDO INSTALADOR (PT-BR) =====
+if exist %INNO% (
+    %INNO% setup.iss
+) else (
+    echo [ALERTA] Inno Setup nao encontrado. O Instalador nao foi gerado.
+)
 
 echo ===== 4. GITHUB RELEASE =====
 git add .
@@ -44,7 +51,7 @@ git push origin :refs/tags/v!VERSAO! >nul 2>&1
 gh release delete v!VERSAO! -y >nul 2>&1
 
 echo Enviando para o GitHub...
-gh release create v!VERSAO! "./dist/monitor.exe" "./Output/Instalador_B1n0_v!VERSAO!.exe" --title "v!VERSAO!" --notes "Versao 4.7 - Agente B1n0: Log Oculto e Desinstalacao Limpa" --latest
+gh release create v!VERSAO! "./dist/monitor.exe" "./Output/Instalador_B1n0_v!VERSAO!.exe" --title "v!VERSAO!" --notes "Agente B1n0 Final - PT-BR" --latest
 
-echo PROCESSO CONCLUIDO PARA O AGENTE B1N0.
+echo TUDO PRONTO! O AGENTE B1N0 ESTA VIVO.
 pause
