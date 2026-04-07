@@ -15,7 +15,7 @@ import ctypes
 # ==========================================
 # CONFIGURAÇÕES TÉCNICAS
 # ==========================================
-VERSION = "5.0"
+VERSION = "5.1"
 ADMIN_PASS = "robotic@p@r@n@" 
 UPDATE_INTERVAL = 60
 GITHUB_REPO = "RoboticaParana/monitor-arduino"
