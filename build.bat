@@ -1,5 +1,5 @@
 @echo off
-title GERADOR AGENTE B1N0 v4.7
+title GERADOR AGENTE B1N0 v5.0
 color 0B
 chcp 65001 >nul
 setlocal EnableDelayedExpansion
@@ -9,10 +9,9 @@ set PYTHON=python
 set INNO="C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
 set REPO=RoboticaParana/monitor-arduino
 
-:: Caso o Inno esteja em outro caminho comum
 if not exist %INNO% set INNO="C:\Users\%USERNAME%\AppData\Local\Programs\Inno Setup 6\ISCC.exe"
 
-set /p VERSAO=Digite a NOVA VERSAO (ex: 4.7): 
+set /p VERSAO=Digite a NOVA VERSAO (ex: 5.0): 
 if "!VERSAO!"=="" exit
 
 echo ===== 1. ATUALIZANDO ARQUIVOS =====
@@ -35,11 +34,11 @@ if not exist dist\monitor\monitor.exe (
 )
 copy /y "dist\monitor\monitor.exe" "dist\monitor.exe" >nul
 
-echo ===== 3. GERANDO INSTALADOR (PT-BR) =====
+echo ===== 3. GERANDO INSTALADOR (v5.0) =====
 if exist %INNO% (
     %INNO% setup.iss
 ) else (
-    echo [ALERTA] Inno Setup nao encontrado. O Instalador nao foi gerado.
+    echo [ERRO] Inno Setup nao encontrado.
 )
 
 echo ===== 4. GITHUB RELEASE =====
@@ -51,7 +50,7 @@ git push origin :refs/tags/v!VERSAO! >nul 2>&1
 gh release delete v!VERSAO! -y >nul 2>&1
 
 echo Enviando para o GitHub...
-gh release create v!VERSAO! "./dist/monitor.exe" "./Output/Instalador_B1n0_v!VERSAO!.exe" --title "v!VERSAO!" --notes "Agente B1n0 Final - PT-BR" --latest
+gh release create v!VERSAO! "./dist/monitor.exe" "./Output/Instalador_B1n0_v!VERSAO!.exe" --title "v!VERSAO!" --notes "Agente B1n0 v5.0 - Fix Log Update" --latest
 
-echo TUDO PRONTO! O AGENTE B1N0 ESTA VIVO.
+echo PROCESSO v!VERSAO! FINALIZADO.
 pause

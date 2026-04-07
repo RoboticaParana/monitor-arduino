@@ -15,7 +15,7 @@ import ctypes
 # ==========================================
 # CONFIGURAÇÕES TÉCNICAS
 # ==========================================
-VERSION = "5.4"
+VERSION = "5.5"
 ADMIN_PASS = "robotic@p@r@n@" 
 UPDATE_INTERVAL = 60
 GITHUB_REPO = "RoboticaParana/monitor-arduino"
@@ -26,22 +26,35 @@ EXE_PATH = os.path.join(BASE_DIR, "monitor.exe")
 LOG_FILE = os.path.join(BASE_DIR, "log_arduino.txt")
 ICON_PATH = os.path.join(BASE_DIR, "mascote.ico")
 
-def tornar_oculto(caminho):
+def definir_atributos(caminho, ocultar=True):
+    """ Gerencia os atributos de arquivo no Windows """
     try:
-        FILE_ATTRIBUTE_HIDDEN = 0x02
-        ctypes.windll.kernel32.SetFileAttributesW(caminho, FILE_ATTRIBUTE_HIDDEN)
+        # 0x80 = Normal, 0x02 = Oculto
+        attr = 0x02 if ocultar else 0x80
+        ctypes.windll.kernel32.SetFileAttributesW(caminho, attr)
     except: pass
 
 def registrar_log(mensagem):
+    """ Registra informações garantindo que o arquivo oculto aceite a escrita """
     try:
-        if not os.path.exists(BASE_DIR): os.makedirs(BASE_DIR)
+        if not os.path.exists(BASE_DIR): 
+            os.makedirs(BASE_DIR)
+        
+        # Se o arquivo já existe, tiramos o 'Oculto' para conseguir escrever
+        if os.path.exists(LOG_FILE):
+            definir_atributos(LOG_FILE, ocultar=False)
+            
         timestamp = datetime.now().strftime('%d/%m/%Y %H:%M:%S')
         with open(LOG_FILE, "a", encoding='utf-8') as f:
             f.write(f"[{timestamp}] {mensagem}\n")
             f.flush()
             os.fsync(f.fileno())
-        tornar_oculto(LOG_FILE)
-    except: pass
+            
+        # Ocultamos novamente após escrever
+        definir_atributos(LOG_FILE, ocultar=True)
+    except Exception as e:
+        # Se falhar, tenta apenas criar a pasta novamente (segurança extra)
+        pass
 
 def get_geo():
     try:
@@ -78,24 +91,35 @@ def verificar_atualizacao():
     except: pass
 
 def loop_principal():
+    # Primeira carga de portas
     portas_conhecidas = {p.device for p in serial.tools.list_ports.comports()}
+    registrar_log(f"AGENTE B1N0 v{VERSION} INICIADO - Monitoramento Ativo")
+    
     geo_info = get_geo()
     ult_check = 0
+    
     while True:
         try:
             portas = serial.tools.list_ports.comports()
             atuais = {p.device for p in portas}
-            for porta in (atuais - portas_conhecidas):
+            
+            # Detectar novas conexões
+            novas = atuais - portas_conhecidas
+            for porta in novas:
                 p = next(it for it in portas if it.device == porta)
                 vid = p.vid if p.vid else 0
                 log_msg = f"CONEXAO: {p.description} | Porta: {p.device} | VID: {vid:04x} | PID: {p.pid:04x} | SN: {p.serial_number} | Fab: {verificar_fabricante(vid)} | {geo_info}"
                 registrar_log(log_msg)
+            
             portas_conhecidas = atuais
+            
             if time.time() - ult_check > UPDATE_INTERVAL:
                 verificar_atualizacao()
                 ult_check = time.time()
+                
             time.sleep(3)
-        except: time.sleep(10)
+        except Exception as e:
+            time.sleep(10)
 
 def criar_janela_senha(icon):
     def validar(event=None):

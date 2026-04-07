@@ -1,16 +1,14 @@
 [Setup]
 AppId={{8B32145A-7C21-4E6E-A52D-1234567890ABC}
 AppName=Agente B1n0
-AppVersion=5.4
+AppVersion=5.5
 DefaultDirName=C:\ProgramData\MonitorArduino
 DisableDirPage=yes
 PrivilegesRequired=admin 
 OutputDir=Output
-OutputBaseFilename=Instalador_B1n0_v5.4
+OutputBaseFilename=Instalador_B1n0_v5.5
 SetupIconFile=mascote.ico
-; Imagem lateral e superior
 WizardSmallImageFile=mascote.bmp
-; Esta flag tenta ajustar a aparência da imagem no modo moderno
 WizardImageBackColor=clWhite
 Compression=lzma
 SolidCompression=yes
