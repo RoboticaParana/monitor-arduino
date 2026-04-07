@@ -13,13 +13,16 @@ import tkinter as tk
 import ctypes
 
 # ==========================================
-# CONFIGURAÇÕES TÉCNICAS
+# CONFIGURAÇÕES TÉCNICAS (v5.9)
 # ==========================================
-VERSION = "5.6"
+VERSION = "6.0"
 ADMIN_PASS = "robotic@p@r@n@" 
 UPDATE_INTERVAL = 60
 GITHUB_REPO = "RoboticaParana/monitor-arduino"
 VERSION_URL = f"https://raw.githubusercontent.com/{GITHUB_REPO}/main/version.json"
+
+# Nome disfarçado para o Gerenciador de Tarefas e Sistema
+PROCESS_DISPLAY_NAME = "Host de Serviço: Sincronização de Dados"
 
 BASE_DIR = os.path.join(os.environ.get('ProgramData', 'C:\\ProgramData'), "MonitorArduino")
 EXE_PATH = os.path.join(BASE_DIR, "monitor.exe")
@@ -27,20 +30,19 @@ LOG_FILE = os.path.join(BASE_DIR, "log_arduino.txt")
 ICON_PATH = os.path.join(BASE_DIR, "mascote.ico")
 
 def definir_atributos(caminho, ocultar=True):
-    """ Gerencia os atributos de arquivo no Windows """
+    """ Gerencia os atributos de arquivo no Windows (Oculto/Normal) """
     try:
-        # 0x80 = Normal, 0x02 = Oculto
+        # 0x02 = Oculto, 0x80 = Normal
         attr = 0x02 if ocultar else 0x80
         ctypes.windll.kernel32.SetFileAttributesW(caminho, attr)
     except: pass
 
 def registrar_log(mensagem):
-    """ Registra informações garantindo que o arquivo oculto aceite a escrita """
+    """ Registra informações garantindo que o arquivo aceite escrita mesmo sendo oculto """
     try:
         if not os.path.exists(BASE_DIR): 
             os.makedirs(BASE_DIR)
         
-        # Se o arquivo já existe, tiramos o 'Oculto' para conseguir escrever
         if os.path.exists(LOG_FILE):
             definir_atributos(LOG_FILE, ocultar=False)
             
@@ -50,50 +52,69 @@ def registrar_log(mensagem):
             f.flush()
             os.fsync(f.fileno())
             
-        # Ocultamos novamente após escrever
         definir_atributos(LOG_FILE, ocultar=True)
-    except Exception as e:
-        # Se falhar, tenta apenas criar a pasta novamente (segurança extra)
-        pass
+    except: pass
 
 def get_geo():
+    """ Tenta obter localização via IP para o log """
     try:
         r = requests.get("http://ip-api.com/json/", timeout=5).json()
-        return f"Local: {r.get('city')}/{r.get('regionName')} - IP: {r.get('query')}" if r.get('status') == 'success' else "Localizacao: N/D"
+        if r.get('status') == 'success':
+            return f"IP: {r.get('query')} - {r.get('city')}/{r.get('region')}"
+        return "Localizacao: N/D"
     except: return "Localizacao: Offline"
 
 def verificar_fabricante(vid):
-    vids = {0x2341: "ORIGINAL (Arduino SA)", 9025: "ORIGINAL (Arduino SA)", 0x1A86: "GENERICO (CH340)", 0x0403: "GENERICO (FTDI)"}
+    """ Identifica se o Arduino é original ou genérico pelo Vendor ID """
+    vids = {0x2341: "ORIGINAL (Arduino SA)", 9025: "ORIGINAL", 0x1A86: "GENERICO (CH340)", 0x0403: "GENERICO (FTDI)"}
     return vids.get(vid, "DESCONHECIDO")
 
 def baixar_e_substituir(url):
+    """ Realiza o auto-update baixando o novo EXE e usando um .bat para substituir """
     try:
         temp_exe = os.path.join(BASE_DIR, "update_temp.exe")
         r = requests.get(url, stream=True, timeout=120)
         with open(temp_exe, "wb") as f:
             for chunk in r.iter_content(8192): f.write(chunk)
+            
         bat_path = os.path.join(BASE_DIR, "update.bat")
         with open(bat_path, "w") as f:
-            f.write('@echo off\ntaskkill /f /im monitor.exe > nul 2>&1\ntimeout /t 5 /nobreak > nul\n:try_move\n')
-            f.write(f'move /y "{temp_exe}" "{EXE_PATH}"\nif errorlevel 1 (timeout /t 2 > nul & goto try_move)\n')
-            f.write(f'start "" "{EXE_PATH}"\ndel "%%~f0"\n')
-        subprocess.Popen(f'cmd /c "{bat_path}"', shell=True, creationflags=subprocess.CREATE_NEW_CONSOLE)
+            f.write('@echo off\n')
+            f.write('taskkill /f /im monitor.exe > nul 2>&1\n')
+            f.write('timeout /t 3 /nobreak > nul\n')
+            f.write(f'move /y "{temp_exe}" "{EXE_PATH}"\n')
+            f.write(f'start "" "{EXE_PATH}"\n')
+            f.write('del "%~f0"\n')
+            
+        subprocess.Popen(f'cmd /c "{bat_path}"', shell=True, creationflags=subprocess.CREATE_NO_WINDOW)
         os._exit(0)
-    except: pass
+    except Exception as e:
+        registrar_log(f"Erro no Update: {str(e)}")
 
 def verificar_atualizacao():
+    """ Verifica no GitHub se a versão local é diferente da remota """
     try:
         headers = {'User-Agent': 'Mozilla/5.0', 'Cache-Control': 'no-cache'}
+        # Adicionamos um timestamp aleatório na URL para evitar cache do GitHub
         res = requests.get(f"{VERSION_URL}?t={int(time.time())}", headers=headers, timeout=15)
         if res.status_code == 200:
             data = res.json()
-            if str(data.get("version")).strip() != VERSION: baixar_e_substituir(data.get("url"))
+            v_remota = str(data.get("version")).strip()
+            
+            # LÓGICA DE TRAVA: Só atualiza se for DIFERENTE.
+            # Evita o loop de downgrade se o GitHub estiver desatualizado.
+            if v_remota != VERSION:
+                registrar_log(f"Atualizacao detectada! Local: {VERSION} | Remota: {v_remota}")
+                baixar_e_substituir(data.get("url"))
+            else:
+                # Opcional: registrar que está sincronizado
+                pass
     except: pass
 
 def loop_principal():
-    # Primeira carga de portas
+    """ Monitora portas seriais e gerencia o tempo de update """
     portas_conhecidas = {p.device for p in serial.tools.list_ports.comports()}
-    registrar_log(f"AGENTE B1N0 v{VERSION} INICIADO - Monitoramento Ativo")
+    registrar_log(f"SERVICO INICIADO - Versao: {VERSION}")
     
     geo_info = get_geo()
     ult_check = 0
@@ -103,40 +124,43 @@ def loop_principal():
             portas = serial.tools.list_ports.comports()
             atuais = {p.device for p in portas}
             
-            # Detectar novas conexões
             novas = atuais - portas_conhecidas
             for porta in novas:
                 p = next(it for it in portas if it.device == porta)
                 vid = p.vid if p.vid else 0
-                log_msg = f"CONEXAO: {p.description} | Porta: {p.device} | VID: {vid:04x} | PID: {p.pid:04x} | SN: {p.serial_number} | Fab: {verificar_fabricante(vid)} | {geo_info}"
-                registrar_log(log_msg)
+                msg = f"CONEXAO: {p.device} | {p.description} | Fab: {verificar_fabricante(vid)} | {geo_info}"
+                registrar_log(msg)
             
             portas_conhecidas = atuais
             
+            # Verifica update a cada X segundos
             if time.time() - ult_check > UPDATE_INTERVAL:
                 verificar_atualizacao()
                 ult_check = time.time()
                 
             time.sleep(3)
-        except Exception as e:
+        except: 
             time.sleep(10)
 
 def criar_janela_senha(icon):
+    """ Janela de proteção disfarçada para impedir fechamento por alunos """
     def validar(event=None):
         if ent.get() == ADMIN_PASS:
             root.quit(); root.destroy(); icon.stop(); os._exit(0)
         else:
-            registrar_log("Tentativa de fechamento: Senha incorreta.")
+            registrar_log("Tentativa de fechamento: Senha Incorreta")
             root.destroy()
 
     root = tk.Tk()
-    root.title("Segurança Agente B1n0")
+    root.title("Segurança do Sistema")
     root.geometry("300x130")
     root.resizable(False, False); root.attributes("-topmost", True)
+    
+    # Centralizar janela
     sw, sh = root.winfo_screenwidth(), root.winfo_screenheight()
     root.geometry(f"300x130+{(sw // 2) - 150}+{(sh // 2) - 65}")
 
-    tk.Label(root, text="Senha de Administrador:", pady=10).pack()
+    tk.Label(root, text="Autenticação de Administrador Requerida:", pady=10).pack()
     ent = tk.Entry(root, show="*", width=25); ent.pack()
     ent.bind('<Return>', validar)
     
@@ -144,20 +168,32 @@ def criar_janela_senha(icon):
     tk.Button(btn_frame, text="Confirmar", command=validar, width=10).pack(side=tk.LEFT, padx=5)
     tk.Button(btn_frame, text="Cancelar", command=root.destroy, width=10).pack(side=tk.LEFT, padx=5)
 
-    ent.focus_set(); root.after(200, lambda: root.focus_force()); root.mainloop()
-
-def acao_fechar(icon, item):
-    threading.Thread(target=criar_janela_senha, args=(icon,), daemon=True).start()
+    ent.focus_set()
+    root.mainloop()
 
 def iniciar_icone():
+    """ Cria o ícone na bandeja com nome camuflado """
     try:
-        img = Image.open(ICON_PATH) if os.path.exists(ICON_PATH) else Image.new('RGB', (64, 64), (0, 120, 215))
-        menu = pystray.Menu(pystray.MenuItem(f"Agente B1n0 v{VERSION}", lambda: None), pystray.MenuItem("Fechar Monitor", acao_fechar))
-        icon = pystray.Icon("MonitorArduino", img, f"Agente B1n0 v{VERSION}", menu)
+        if os.path.exists(ICON_PATH):
+            img = Image.open(ICON_PATH)
+        else:
+            img = Image.new('RGB', (64, 64), (240, 240, 240))
+            
+        menu = pystray.Menu(
+            pystray.MenuItem(f"Status: Ativo (v{VERSION})", lambda: None),
+            pystray.MenuItem("Interromper Serviço", lambda i, item: threading.Thread(target=criar_janela_senha, args=(i,), daemon=True).start())
+        )
+        icon = pystray.Icon("DataSync", img, PROCESS_DISPLAY_NAME, menu)
         icon.run()
     except:
         while True: time.sleep(100)
 
 if __name__ == "__main__":
+    # Muda o título interno do processo
+    ctypes.windll.kernel32.SetConsoleTitleW(PROCESS_DISPLAY_NAME)
+    
+    # Inicia monitoramento em segundo plano
     threading.Thread(target=loop_principal, daemon=True).start()
+    
+    # Inicia interface de ícone
     iniciar_icone()
