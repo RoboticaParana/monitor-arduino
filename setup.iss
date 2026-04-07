@@ -1,15 +1,17 @@
 [Setup]
 AppId={{8B32145A-7C21-4E6E-A52D-1234567890ABC}
 AppName=Agente B1n0
-AppVersion=5.3
+AppVersion=5.4
 DefaultDirName=C:\ProgramData\MonitorArduino
 DisableDirPage=yes
 PrivilegesRequired=admin 
 OutputDir=Output
-OutputBaseFilename=Instalador_B1n0_v5.3
+OutputBaseFilename=Instalador_B1n0_v5.4
 SetupIconFile=mascote.ico
-; Imagens do Instalador (Devem ser .bmp)
+; Imagem lateral e superior
 WizardSmallImageFile=mascote.bmp
+; Esta flag tenta ajustar a aparência da imagem no modo moderno
+WizardImageBackColor=clWhite
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -30,7 +32,6 @@ function InitializeUninstall(): Boolean;
 var
   ErrorCode: Integer;
 begin
-  // Mata o processo antes de remover os arquivos
   ShellExec('open', 'taskkill.exe', '/f /im monitor.exe', '', SW_HIDE, ewWaitUntilTerminated, ErrorCode);
   Result := True;
 end;
@@ -39,7 +40,6 @@ procedure CurUninstallStepChanged(UintStep: TUninstallStep);
 begin
   if UintStep = usPostUninstall then
   begin
-    // Limpa resíduos, exceto o log
     DelTree(ExpandConstant('{app}\build'), True, True, True);
   end;
 end;
