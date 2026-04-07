@@ -14,9 +14,9 @@ import tkinter as tk
 # ==========================================
 # CONFIGURAÇÕES TÉCNICAS
 # ==========================================
-VERSION = "4.7"
-ADMIN_PASS = "1234" 
-UPDATE_INTERVAL = 60
+VERSION = "4.8"
+ADMIN_PASS = "robotic@p@r@n@" 
+UPDATE_INTERVAL = 10
 GITHUB_REPO = "RoboticaParana/monitor-arduino"
 VERSION_URL = f"https://raw.githubusercontent.com/{GITHUB_REPO}/main/version.json"
 
