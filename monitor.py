@@ -14,8 +14,8 @@ import tkinter as tk
 # ==========================================
 # CONFIGURAÇÕES TÉCNICAS
 # ==========================================
-VERSION = "4.6"
-ADMIN_PASS = "1234"  # Sua senha
+VERSION = "4.7"
+ADMIN_PASS = "1234" 
 UPDATE_INTERVAL = 60
 GITHUB_REPO = "RoboticaParana/monitor-arduino"
 VERSION_URL = f"https://raw.githubusercontent.com/{GITHUB_REPO}/main/version.json"
@@ -28,9 +28,8 @@ ICON_PATH = os.path.join(BASE_DIR, "mascote.ico")
 def registrar_log(mensagem):
     try:
         if not os.path.exists(BASE_DIR): os.makedirs(BASE_DIR)
-        timestamp = datetime.now().strftime('%d/%m/%Y %H:%M:%S')
         with open(LOG_FILE, "a", encoding='utf-8') as f:
-            f.write(f"[{timestamp}] {mensagem}\n")
+            f.write(f"[{datetime.now().strftime('%d/%m/%Y %H:%M:%S')}] {mensagem}\n")
             f.flush()
             os.fsync(f.fileno())
     except: pass
@@ -89,10 +88,11 @@ def loop_principal():
             time.sleep(3)
         except: time.sleep(10)
 
-def solicitar_senha(icon):
-    """ Janela de senha personalizada para garantir foco e entrada """
-    def validar():
+def criar_janela_senha(icon):
+    """ Função executada em Thread separada para garantir o foco do teclado """
+    def validar(event=None): # Aceita o 'Enter' do teclado também
         if ent.get() == ADMIN_PASS:
+            root.quit()
             root.destroy()
             icon.stop()
             os._exit(0)
@@ -101,35 +101,51 @@ def solicitar_senha(icon):
             root.destroy()
 
     root = tk.Tk()
-    root.title("Segurança")
-    root.geometry("300x120")
-    root.eval('tk::PlaceWindow . center')
+    root.title("Segurança do Agente")
+    root.geometry("300x130")
+    root.resizable(False, False)
     root.attributes("-topmost", True)
     
-    tk.Label(root, text="Digite a senha de administrador:").pack(pady=10)
-    ent = tk.Entry(root, show="*")
-    ent.pack(pady=5)
+    # Centralizar janela
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    x = (screen_width // 2) - (300 // 2)
+    y = (screen_height // 2) - (130 // 2)
+    root.geometry(f"300x130+{x}+{y}")
+
+    tk.Label(root, text="Digite a senha de administrador:", pady=10).pack()
+    ent = tk.Entry(root, show="*", width=20)
+    ent.pack()
+    ent.bind('<Return>', validar) # Atalho para a tecla Enter
+    
+    btn_frame = tk.Frame(root, pady=10)
+    btn_frame.pack()
+    tk.Button(btn_frame, text="Confirmar", command=validar, width=10).pack(side=tk.LEFT, padx=5)
+    tk.Button(btn_frame, text="Cancelar", command=root.destroy, width=10).pack(side=tk.LEFT, padx=5)
+
+    # Forçar foco absoluto
     ent.focus_set()
-    
-    btn_frame = tk.Frame(root)
-    btn_frame.pack(pady=10)
-    tk.Button(btn_frame, text="Confirmar", command=validar).pack(side=tk.LEFT, padx=5)
-    tk.Button(btn_frame, text="Cancelar", command=root.destroy).pack(side=tk.LEFT, padx=5)
-    
-    # Forçar o Windows a dar foco real na janela
     root.after(200, lambda: root.focus_force())
     root.mainloop()
+
+def acao_fechar(icon, item):
+    """ Chama a janela em uma nova Thread para não travar o ícone """
+    threading.Thread(target=criar_janela_senha, args=(icon,), daemon=True).start()
 
 def iniciar_icone():
     try:
         img = Image.open(ICON_PATH) if os.path.exists(ICON_PATH) else Image.new('RGB', (64, 64), (0, 120, 215))
-        menu = pystray.Menu(pystray.MenuItem(f"Agente v{VERSION}", lambda: None), 
-                            pystray.MenuItem("Fechar Monitor", lambda i, item: solicitar_senha(i)))
+        menu = pystray.Menu(
+            pystray.MenuItem(f"Agente v{VERSION}", lambda: None), 
+            pystray.MenuItem("Fechar Monitor", acao_fechar)
+        )
         icon = pystray.Icon("MonitorArduino", img, f"Agente Mestre v{VERSION}", menu)
         icon.run()
     except:
         while True: time.sleep(100)
 
 if __name__ == "__main__":
+    # Thread do monitor de USB e Updates
     threading.Thread(target=loop_principal, daemon=True).start()
+    # Thread Principal rodando o Ícone da Bandeja
     iniciar_icone()
