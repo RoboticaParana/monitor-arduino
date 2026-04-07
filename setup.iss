@@ -1,12 +1,12 @@
 [Setup]
 AppId={{8B32145A-7C21-4E6E-A52D-1234567890ABC}
 AppName=Agente B1n0
-AppVersion=6.7
+AppVersion=5.1
 DefaultDirName={commonpf}\AgenteB1n0
-DisableDirPage=no
+DisableDirPage=yes
 PrivilegesRequired=admin 
 OutputDir=Output
-OutputBaseFilename=Instalador_AgenteB1n0_v6.7
+OutputBaseFilename=Instalador_AgenteB1n0_v5.1
 SetupIconFile=mascote.ico
 Compression=lzma
 SolidCompression=yes
@@ -24,7 +24,7 @@ Source: "mascote.ico"; DestDir: "{app}"; Flags: ignoreversion
 Root: HKLM; Subkey: "SOFTWARE\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "AgenteB1n0"; ValueData: """{app}\monitor.exe"""; Flags: uninsdeletevalue
 
 [Run]
-Filename: "{app}\monitor.exe"; Description: "Iniciar Agente B1n0 agora"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\monitor.exe"; Description: "Iniciar Agente B1n0"; Flags: nowait postinstall skipifsilent
 
 [UninstallRun]
-Filename: "taskkill"; Parameters: "/f /im monitor.exe"; Flags: runhidden; RunOnceId: "StopAgente"
+Filename: "taskkill"; Parameters: "/f /im monitor.exe"; Flags: runhidden; RunOnceId: "StopB1n0"

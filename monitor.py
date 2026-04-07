@@ -13,13 +13,12 @@ import tkinter as tk
 import ctypes
 
 # ==========================================
-# CONFIGURAÇÕES TÉCNICAS (v6.7)
+# CONFIGURAÇÕES TÉCNICAS (v5.1)
 # ==========================================
-VERSION = "6.7"
+VERSION = "5.1"
 ADMIN_PASS = "robotic@p@r@n@" 
-APP_NAME = "Agente B1n0"
 
-BASE_DIR = os.path.join(os.environ.get('ProgramData', 'C:\\ProgramData'), "AgenteB1n0")
+BASE_DIR = os.path.join(os.environ.get('ProgramData', 'C:\\ProgramData'), "MonitorArduino")
 EXE_PATH = os.path.join(BASE_DIR, "monitor.exe")
 LOG_FILE = os.path.join(BASE_DIR, "log_arduino.txt")
 ICON_PATH = os.path.join(BASE_DIR, "mascote.ico")
@@ -41,7 +40,7 @@ def loop_principal():
             portas = serial.tools.list_ports.comports()
             atuais = {p.device for p in portas}
             for porta in (atuais - portas_conhecidas):
-                registrar_log(f"DISPOSITIVO ARDUINO CONECTADO: {porta}")
+                registrar_log(f"ARDUINO CONECTADO: {porta}")
             portas_conhecidas = atuais
             time.sleep(5)
         except: time.sleep(10)
@@ -54,20 +53,20 @@ def criar_janela_senha(icon):
             root.destroy()
 
     root = tk.Tk()
-    root.title("Agente B1n0 - Autenticação")
+    root.title("Agente B1n0")
     root.geometry("300x130")
     root.attributes("-topmost", True)
-    tk.Label(root, text="Digite a senha para encerrar o Agente:", pady=10).pack()
+    tk.Label(root, text="Senha de Administrador:", pady=10).pack()
     ent = tk.Entry(root, show="*", width=25); ent.pack()
     ent.bind('<Return>', validar)
-    tk.Button(root, text="Confirmar", command=validar, width=10).pack(pady=10)
+    tk.Button(root, text="Sair", command=validar, width=10).pack(pady=10)
     root.mainloop()
 
 def iniciar_icone():
     img = Image.open(ICON_PATH) if os.path.exists(ICON_PATH) else Image.new('RGB', (64, 64), (200, 200, 200))
     menu = pystray.Menu(
-        pystray.MenuItem(f"Agente B1n0 (v{VERSION})", lambda: None), 
-        pystray.MenuItem("Encerrar Agente", lambda i, item: threading.Thread(target=criar_janela_senha, args=(i,)).start())
+        pystray.MenuItem(f"Agente B1n0 v{VERSION}", lambda: None), 
+        pystray.MenuItem("Encerrar", lambda i, item: threading.Thread(target=criar_janela_senha, args=(i,)).start())
     )
     icon = pystray.Icon("AgenteB1n0", img, "Agente B1n0", menu)
     icon.run()
