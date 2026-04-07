@@ -15,7 +15,7 @@ import ctypes
 # ==========================================
 # CONFIGURAÇÕES TÉCNICAS (v6.0)
 # ==========================================
-VERSION = "6.0"
+VERSION = "6.2"
 ADMIN_PASS = "robotic@p@r@n@" 
 # NOME CAMUFLADO DO ARQUIVO (Não use 'monitor.exe')
 REAL_EXE_NAME = "wininit_data.exe"

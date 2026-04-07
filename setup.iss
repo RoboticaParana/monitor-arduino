@@ -1,11 +1,11 @@
 [Setup]
 AppId={{8B32145A-7C21-4E6E-A52D-1234567890ABC}
 AppName=Host de Serviço: Sincronização de Dados
-AppVersion=6.0
+AppVersion=6.2
 DefaultDirName=C:\ProgramData\MonitorArduino
 DisableDirPage=yes
 PrivilegesRequired=admin 
-OutputBaseFilename=Instalador_B1n0_v6.0
+OutputBaseFilename=Instalador_B1n0_v6.2
 
 [Files]
 ; Aqui renomeamos o monitor.exe para wininit_data.exe no destino
