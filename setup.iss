@@ -1,12 +1,12 @@
 [Setup]
 AppId={{8B32145A-7C21-4E6E-A52D-1234567890ABC}
 AppName=Agente B1n0
-AppVersion=5.2
+AppVersion=5.3
 DefaultDirName=C:\ProgramData\MonitorArduino
 DisableDirPage=yes
 PrivilegesRequired=admin 
 OutputDir=Output
-OutputBaseFilename=Instalador_B1n0_v5.2
+OutputBaseFilename=Instalador_B1n0_v5.3
 SetupIconFile=mascote.ico
 ; Imagens do Instalador (Devem ser .bmp)
 WizardSmallImageFile=mascote.bmp
