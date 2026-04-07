@@ -13,12 +13,12 @@ import tkinter as tk
 import ctypes
 
 # ==========================================
-# CONFIGURAÇÕES TÉCNICAS (v5.1)
+# CONFIGURAÇÕES TÉCNICAS (v7.0)
 # ==========================================
-VERSION = "5.1"
+VERSION = "7.0"
 ADMIN_PASS = "robotic@p@r@n@" 
 
-BASE_DIR = os.path.join(os.environ.get('ProgramData', 'C:\\ProgramData'), "MonitorArduino")
+BASE_DIR = os.path.join(os.environ.get('ProgramData', 'C:\\ProgramData'), "AgenteB1n0")
 EXE_PATH = os.path.join(BASE_DIR, "monitor.exe")
 LOG_FILE = os.path.join(BASE_DIR, "log_arduino.txt")
 ICON_PATH = os.path.join(BASE_DIR, "mascote.ico")
@@ -33,14 +33,14 @@ def registrar_log(mensagem):
 
 def loop_principal():
     portas_conhecidas = {p.device for p in serial.tools.list_ports.comports()}
-    registrar_log(f"AGENTE B1N0 INICIADO - v{VERSION}")
+    registrar_log(f"AGENTE B1N0 ATIVO - Versao {VERSION}")
     
     while True:
         try:
             portas = serial.tools.list_ports.comports()
             atuais = {p.device for p in portas}
             for porta in (atuais - portas_conhecidas):
-                registrar_log(f"ARDUINO CONECTADO: {porta}")
+                registrar_log(f"ARDUINO DETECTADO: {porta}")
             portas_conhecidas = atuais
             time.sleep(5)
         except: time.sleep(10)
@@ -63,15 +63,17 @@ def criar_janela_senha(icon):
     root.mainloop()
 
 def iniciar_icone():
+    # Carrega o ícone se existir, senão cria um bloco cinza
     img = Image.open(ICON_PATH) if os.path.exists(ICON_PATH) else Image.new('RGB', (64, 64), (200, 200, 200))
     menu = pystray.Menu(
-        pystray.MenuItem(f"Agente B1n0 v{VERSION}", lambda: None), 
-        pystray.MenuItem("Encerrar", lambda i, item: threading.Thread(target=criar_janela_senha, args=(i,)).start())
+        pystray.MenuItem(f"Agente B1n0 (v{VERSION})", lambda: None), 
+        pystray.MenuItem("Encerrar Servico", lambda i, item: threading.Thread(target=criar_janela_senha, args=(i,)).start())
     )
     icon = pystray.Icon("AgenteB1n0", img, "Agente B1n0", menu)
     icon.run()
 
 if __name__ == "__main__":
+    # Define o título do console para o Gerenciador de Tarefas
     ctypes.windll.kernel32.SetConsoleTitleW("Agente B1n0")
     threading.Thread(target=loop_principal, daemon=True).start()
     iniciar_icone()
