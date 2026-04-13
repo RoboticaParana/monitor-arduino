@@ -1,3 +1,5 @@
+URL_PLANILHA = "https://script.google.com/macros/s/AKfycbxDiys_7p3BFqwuq-GJ-pe_Fn0q6cIiVCBkXwKTp2Ft5Mqkud6nFeMCdR3DYsbu49XB/exec" # COLE AQUI A MESMA URL DA EXTENSÃO
+
 import os
 import time
 import requests
@@ -10,35 +12,22 @@ from PIL import Image
 import pystray
 import tkinter as tk
 import ctypes
+import json
 
 # ==========================================
-# CONFIGURAÇÕES TÉCNICAS (v7.1)
+# CONFIGURAÇÕES TÉCNICAS (v7.2)
 # ==========================================
-VERSION = "7.1"
+VERSION = "7.2"
 ADMIN_PASS = "robotic@p@r@n@" 
-URL_PLANILHA = "https://script.google.com/macros/s/AKfycbxDiys_7p3BFqwuq-GJ-pe_Fn0q6cIiVCBkXwKTp2Ft5Mqkud6nFeMCdR3DYsbu49XB/exec" # COLE AQUI A MESMA URL DA EXTENSÃO
+
 
 BASE_DIR = os.path.join(os.environ.get('ProgramData', 'C:\\ProgramData'), "AgenteB1n0")
-LOG_FILE = os.path.join(BASE_DIR, "log_arduino.txt")
 ICON_PATH = os.path.join(BASE_DIR, "mascote.ico")
 
 def obter_id_unico():
-    # Gera um ID baseado no hardware para bater com o padrão WIN- da extensão
+    # ID persistente baseado no MAC Address
     id_hash = hex(uuid.getnode()).upper()[2:8]
     return f"WIN-{id_hash}"
-
-def obter_ip_local():
-    try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(("8.8.8.8", 80))
-        ip = s.getsockname()[0]
-        s.close()
-        return ip
-    except: return "127.0.0.1"
-
-def obter_ip_publico():
-    try: return requests.get('https://api.ipify.org', timeout=5).text
-    except: return "Rede Restrita"
 
 def enviar_para_planilha(evento, plataforma):
     dados = {
@@ -47,41 +36,54 @@ def enviar_para_planilha(evento, plataforma):
         "evento": f"{evento} de um dispositivo Windows ({plataforma})",
         "placa": "Detectada via Software",
         "serial": obter_id_unico(),
-        "ip_publico": obter_ip_publico(),
-        "ip_local": obter_ip_local()
+        "ip_publico": "Buscando...",
+        "ip_local": "127.0.0.1"
     }
+    
     try:
-        # Envia como JSON para o Google Apps Script
-        requests.post(URL_PLANILHA, json=dados, timeout=10)
-    except: pass
+        # Tenta obter IPs rapidamente
+        dados["ip_local"] = socket.gethostbyname(socket.gethostname())
+        # O Google Apps Script prefere receber os dados como string ou parâmetros
+        # Usamos allow_redirects=True porque o Google sempre redireciona o POST
+        response = requests.post(
+            URL_PLANILHA, 
+            data=json.dumps(dados),
+            headers={'Content-Type': 'application/json'},
+            allow_redirects=True, 
+            timeout=15
+        )
+        print(f"Status do envio: {response.status_code}")
+    except Exception as e:
+        print(f"Erro ao enviar: {e}")
 
 def loop_principal():
-    # Mapeamento de processos para nomes amigáveis
+    # Monitoramento de processos
     SOFTWARES = {
         "arduino.exe": "Arduino IDE",
+        "arduino-ide.exe": "Arduino IDE", # Versão 2.x do Arduino
         "mBlock.exe": "mBlock Software",
-        "arduino-cli.exe": "Arduino IDE (CLI)"
+        "javaw.exe": "Arduino IDE/mBlock (Java)" # Algumas versões antigas rodam como javaw
     }
     
-    ja_vistos = set()
-    
+    # Dicionário para controlar quando o log foi enviado (evita spam)
+    ultimo_envio = {}
+
     while True:
         try:
-            # Verifica processos ativos
             for proc in psutil.process_iter(['name']):
                 nome = proc.info['name']
-                if nome in SOFTWARES and nome not in ja_vistos:
-                    enviar_para_planilha("UPLOAD", SOFTWARES[nome])
-                    ja_vistos.add(nome)
+                if nome in SOFTWARES:
+                    agora = time.time()
+                    # Só envia se passou mais de 60 segundos do último envio do mesmo software
+                    if nome not in ultimo_envio or (agora - ultimo_envio[nome] > 60):
+                        enviar_para_planilha("UPLOAD", SOFTWARES[nome])
+                        ultimo_envio[nome] = agora
             
-            # Se o processo fechou, remove da lista para permitir novo log no futuro
-            nomes_ativos = [p.info['name'] for p in psutil.process_iter(['name'])]
-            ja_vistos = {n for n in ja_vistos if n in nomes_ativos}
-            
-            time.sleep(5)
-        except: time.sleep(10)
+            time.sleep(10) # Verifica a cada 10 segundos
+        except:
+            time.sleep(15)
 
-# --- MANTÉM AS FUNÇÕES DE INTERFACE (ÍCONE E SENHA) IGUAIS ---
+# --- MANTÉM AS FUNÇÕES DE INTERFACE (ÍCONE E SENHA) ---
 def criar_janela_senha(icon):
     def validar(event=None):
         if ent.get() == ADMIN_PASS:
@@ -107,6 +109,6 @@ def iniciar_icone():
     icon.run()
 
 if __name__ == "__main__":
-    ctypes.windll.kernel32.SetConsoleTitleW("Agente B1n0")
+    # Garante que o processo rode em background sem console se compilado com --noconsole
     threading.Thread(target=loop_principal, daemon=True).start()
     iniciar_icone()

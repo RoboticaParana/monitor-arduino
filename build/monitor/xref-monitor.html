@@ -156,7 +156,6 @@ imports:
  &#8226;   <a href="#genericpath">genericpath</a>
  &#8226;   <a href="#heapq">heapq</a>
  &#8226;   <a href="#io">io</a>
- &#8226;   <a href="#json">json</a>
  &#8226;   <a href="#keyword">keyword</a>
  &#8226;   <a href="#linecache">linecache</a>
  &#8226;   <a href="#locale">locale</a>
@@ -164,6 +163,7 @@ imports:
  &#8226;   <a href="#operator">operator</a>
  &#8226;   <a href="#os">os</a>
  &#8226;   <a href="#posixpath">posixpath</a>
+ &#8226;   <a href="#psutil">psutil</a>
  &#8226;   <a href="#pyi_rth__tkinter.py">pyi_rth__tkinter.py</a>
  &#8226;   <a href="#pyi_rth_inspect.py">pyi_rth_inspect.py</a>
  &#8226;   <a href="#pyi_rth_multiprocessing.py">pyi_rth_multiprocessing.py</a>
@@ -177,18 +177,17 @@ imports:
  &#8226;   <a href="#re._parser">re._parser</a>
  &#8226;   <a href="#reprlib">reprlib</a>
  &#8226;   <a href="#requests">requests</a>
- &#8226;   <a href="#serial.tools.list_ports">serial.tools.list_ports</a>
+ &#8226;   <a href="#socket">socket</a>
  &#8226;   <a href="#sre_compile">sre_compile</a>
  &#8226;   <a href="#sre_constants">sre_constants</a>
  &#8226;   <a href="#sre_parse">sre_parse</a>
  &#8226;   <a href="#stat">stat</a>
- &#8226;   <a href="#subprocess">subprocess</a>
- &#8226;   <a href="#sys">sys</a>
  &#8226;   <a href="#threading">threading</a>
  &#8226;   <a href="#time">time</a>
  &#8226;   <a href="#tkinter">tkinter</a>
  &#8226;   <a href="#traceback">traceback</a>
  &#8226;   <a href="#types">types</a>
+ &#8226;   <a href="#uuid">uuid</a>
  &#8226;   <a href="#warnings">warnings</a>
  &#8226;   <a href="#weakref">weakref</a>
 
@@ -292,17 +291,6 @@ imported by:
 <span class="moduletype">MissingModule</span>  <div class="import">
 imported by:
     <a href="#urllib3.contrib.pyopenssl">urllib3.contrib.pyopenssl</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="'System.IO'"></a>
-  <a target="code" href="" type="text/plain"><tt>'System.IO'</tt></a>
-<span class="moduletype">MissingModule</span>  <div class="import">
-imported by:
-    <a href="#serial.serialcli">serial.serialcli</a>
 
   </div>
 
@@ -2823,17 +2811,6 @@ imported by:
 </div>
 
 <div class="node">
-  <a name="System"></a>
-  <a target="code" href="" type="text/plain"><tt>System</tt></a>
-<span class="moduletype">MissingModule</span>  <div class="import">
-imported by:
-    <a href="#serial.serialcli">serial.serialcli</a>
-
-  </div>
-
-</div>
-
-<div class="node">
   <a name="Xlib"></a>
   <a target="code" href="" type="text/plain"><tt>Xlib</tt></a>
 <span class="moduletype">MissingModule</span>  <div class="import">
@@ -2967,19 +2944,6 @@ imported by:
  &#8226;   <a href="#packaging.utils">packaging.utils</a>
  &#8226;   <a href="#packaging.version">packaging.version</a>
  &#8226;   <a href="#pydoc">pydoc</a>
- &#8226;   <a href="#serial">serial</a>
- &#8226;   <a href="#serial.serialcli">serial.serialcli</a>
- &#8226;   <a href="#serial.serialjava">serial.serialjava</a>
- &#8226;   <a href="#serial.serialposix">serial.serialposix</a>
- &#8226;   <a href="#serial.serialutil">serial.serialutil</a>
- &#8226;   <a href="#serial.serialwin32">serial.serialwin32</a>
- &#8226;   <a href="#serial.tools.list_ports">serial.tools.list_ports</a>
- &#8226;   <a href="#serial.tools.list_ports_common">serial.tools.list_ports_common</a>
- &#8226;   <a href="#serial.tools.list_ports_linux">serial.tools.list_ports_linux</a>
- &#8226;   <a href="#serial.tools.list_ports_osx">serial.tools.list_ports_osx</a>
- &#8226;   <a href="#serial.tools.list_ports_posix">serial.tools.list_ports_posix</a>
- &#8226;   <a href="#serial.tools.list_ports_windows">serial.tools.list_ports_windows</a>
- &#8226;   <a href="#serial.win32">serial.win32</a>
  &#8226;   <a href="#setuptools">setuptools</a>
  &#8226;   <a href="#setuptools._core_metadata">setuptools._core_metadata</a>
  &#8226;   <a href="#setuptools._distutils._modified">setuptools._distutils._modified</a>
@@ -4861,6 +4825,16 @@ imported by:
 </div>
 
 <div class="node">
+  <a name="_uuid"></a>
+  <tt>_uuid</tt> <span class="moduletype"><tt>C:\Program Files\Python314\DLLs\_uuid.pyd</tt></span>  <div class="import">
+imported by:
+    <a href="#uuid">uuid</a>
+
+  </div>
+
+</div>
+
+<div class="node">
   <a name="_warnings"></a>
   <tt>_warnings</tt> <span class="moduletype"><i>(builtin module)</i></span>  <div class="import">
 imported by:
@@ -5053,11 +5027,11 @@ imported by:
  &#8226;   <a href="#platform">platform</a>
  &#8226;   <a href="#py_compile">py_compile</a>
  &#8226;   <a href="#random">random</a>
- &#8226;   <a href="#serial.tools.list_ports">serial.tools.list_ports</a>
  &#8226;   <a href="#setuptools._vendor.backports.tarfile">setuptools._vendor.backports.tarfile</a>
  &#8226;   <a href="#tarfile">tarfile</a>
  &#8226;   <a href="#tokenize">tokenize</a>
  &#8226;   <a href="#unittest.main">unittest.main</a>
+ &#8226;   <a href="#uuid">uuid</a>
  &#8226;   <a href="#webbrowser">webbrowser</a>
  &#8226;   <a href="#zipfile">zipfile</a>
 
@@ -5074,8 +5048,6 @@ imported by:
  &#8226;   <a href="#multiprocessing.dummy">multiprocessing.dummy</a>
  &#8226;   <a href="#multiprocessing.managers">multiprocessing.managers</a>
  &#8226;   <a href="#multiprocessing.reduction">multiprocessing.reduction</a>
- &#8226;   <a href="#serial.serialposix">serial.serialposix</a>
- &#8226;   <a href="#serial.serialutil">serial.serialutil</a>
  &#8226;   <a href="#socket">socket</a>
 
   </div>
@@ -6850,6 +6822,9 @@ imported by:
  &#8226;   <a href="#pkgutil">pkgutil</a>
  &#8226;   <a href="#platform">platform</a>
  &#8226;   <a href="#pprint">pprint</a>
+ &#8226;   <a href="#psutil">psutil</a>
+ &#8226;   <a href="#psutil._common">psutil._common</a>
+ &#8226;   <a href="#psutil._ntuples">psutil._ntuples</a>
  &#8226;   <a href="#pydoc">pydoc</a>
  &#8226;   <a href="#queue">queue</a>
  &#8226;   <a href="#requests.compat">requests.compat</a>
@@ -7282,6 +7257,8 @@ imported by:
  &#8226;   <a href="#importlib.resources.readers">importlib.resources.readers</a>
  &#8226;   <a href="#packaging._manylinux">packaging._manylinux</a>
  &#8226;   <a href="#packaging._tokenizer">packaging._tokenizer</a>
+ &#8226;   <a href="#psutil">psutil</a>
+ &#8226;   <a href="#psutil._pswindows">psutil._pswindows</a>
  &#8226;   <a href="#pystray._util">pystray._util</a>
  &#8226;   <a href="#pystray._xorg">pystray._xorg</a>
  &#8226;   <a href="#requests.utils">requests.utils</a>
@@ -7462,12 +7439,9 @@ imported by:
  &#8226;   <a href="#multiprocessing.sharedctypes">multiprocessing.sharedctypes</a>
  &#8226;   <a href="#packaging._manylinux">packaging._manylinux</a>
  &#8226;   <a href="#platform">platform</a>
+ &#8226;   <a href="#psutil._common">psutil._common</a>
  &#8226;   <a href="#pystray._util.win32">pystray._util.win32</a>
  &#8226;   <a href="#pystray._win32">pystray._win32</a>
- &#8226;   <a href="#serial.serialwin32">serial.serialwin32</a>
- &#8226;   <a href="#serial.tools.list_ports_osx">serial.tools.list_ports_osx</a>
- &#8226;   <a href="#serial.tools.list_ports_windows">serial.tools.list_ports_windows</a>
- &#8226;   <a href="#serial.win32">serial.win32</a>
  &#8226;   <a href="#setuptools._vendor.packaging._manylinux">setuptools._vendor.packaging._manylinux</a>
  &#8226;   <a href="#setuptools._vendor.wheel.macosx_libfile">setuptools._vendor.wheel.macosx_libfile</a>
  &#8226;   <a href="#setuptools.windows_support">setuptools.windows_support</a>
@@ -7648,8 +7622,6 @@ imported by:
  &#8226;   <a href="#ctypes.util">ctypes.util</a>
  &#8226;   <a href="#pystray._util.win32">pystray._util.win32</a>
  &#8226;   <a href="#pystray._win32">pystray._win32</a>
- &#8226;   <a href="#serial.tools.list_ports_windows">serial.tools.list_ports_windows</a>
- &#8226;   <a href="#serial.win32">serial.win32</a>
  &#8226;   <a href="#setuptools.windows_support">setuptools.windows_support</a>
 
   </div>
@@ -7716,6 +7688,7 @@ imported by:
  &#8226;   <a href="#http.cookiejar">http.cookiejar</a>
  &#8226;   <a href="#http.server">http.server</a>
  &#8226;   <a href="#monitor.py">monitor.py</a>
+ &#8226;   <a href="#psutil">psutil</a>
  &#8226;   <a href="#requests.models">requests.models</a>
  &#8226;   <a href="#requests.sessions">requests.sessions</a>
  &#8226;   <a href="#setuptools._vendor.tomli._re">setuptools._vendor.tomli._re</a>
@@ -10913,6 +10886,8 @@ imported by:
  &#8226;   <a href="#inspect">inspect</a>
  &#8226;   <a href="#monitor.py">monitor.py</a>
  &#8226;   <a href="#packaging._elffile">packaging._elffile</a>
+ &#8226;   <a href="#psutil._common">psutil._common</a>
+ &#8226;   <a href="#psutil._pswindows">psutil._pswindows</a>
  &#8226;   <a href="#py_compile">py_compile</a>
  &#8226;   <a href="#re">re</a>
  &#8226;   <a href="#setuptools._vendor.packaging._elffile">setuptools._vendor.packaging._elffile</a>
@@ -10923,6 +10898,7 @@ imported by:
  &#8226;   <a href="#urllib3._collections">urllib3._collections</a>
  &#8226;   <a href="#urllib3.util.request">urllib3.util.request</a>
  &#8226;   <a href="#urllib3.util.timeout">urllib3.util.timeout</a>
+ &#8226;   <a href="#uuid">uuid</a>
 
   </div>
 
@@ -10950,7 +10926,6 @@ imported by:
  &#8226;   <a href="#pathlib">pathlib</a>
  &#8226;   <a href="#pathlib._os">pathlib._os</a>
  &#8226;   <a href="#posixpath">posixpath</a>
- &#8226;   <a href="#serial.serialposix">serial.serialposix</a>
  &#8226;   <a href="#setuptools._distutils.file_util">setuptools._distutils.file_util</a>
  &#8226;   <a href="#setuptools._vendor.jaraco.context">setuptools._vendor.jaraco.context</a>
  &#8226;   <a href="#shutil">shutil</a>
@@ -10973,7 +10948,6 @@ imported by:
 imported by:
     <a href="#_pyrepl.unix_console">_pyrepl.unix_console</a>
  &#8226;   <a href="#pathlib._os">pathlib._os</a>
- &#8226;   <a href="#serial.serialposix">serial.serialposix</a>
  &#8226;   <a href="#subprocess">subprocess</a>
 
   </div>
@@ -11116,6 +11090,9 @@ imported by:
  &#8226;   <a href="#pickle">pickle</a>
  &#8226;   <a href="#pkgutil">pkgutil</a>
  &#8226;   <a href="#platform">platform</a>
+ &#8226;   <a href="#psutil">psutil</a>
+ &#8226;   <a href="#psutil._common">psutil._common</a>
+ &#8226;   <a href="#psutil._pswindows">psutil._pswindows</a>
  &#8226;   <a href="#pystray._base">pystray._base</a>
  &#8226;   <a href="#pystray._util.gtk">pystray._util.gtk</a>
  &#8226;   <a href="#pystray._xorg">pystray._xorg</a>
@@ -11292,9 +11269,6 @@ imports:
   <div class="import">
 imported by:
     <a href="#pathlib">pathlib</a>
- &#8226;   <a href="#serial.tools.list_ports_common">serial.tools.list_ports_common</a>
- &#8226;   <a href="#serial.tools.list_ports_linux">serial.tools.list_ports_linux</a>
- &#8226;   <a href="#serial.tools.list_ports_posix">serial.tools.list_ports_posix</a>
  &#8226;   <a href="#setuptools._distutils.command.sdist">setuptools._distutils.command.sdist</a>
  &#8226;   <a href="#setuptools.command.bdist_wheel">setuptools.command.bdist_wheel</a>
  &#8226;   <a href="#setuptools.config.expand">setuptools.config.expand</a>
@@ -11386,6 +11360,7 @@ imported by:
  &#8226;   <a href="#setuptools._vendor.wheel.wheelfile">setuptools._vendor.wheel.wheelfile</a>
  &#8226;   <a href="#urllib.request">urllib.request</a>
  &#8226;   <a href="#urllib3.util.ssl_">urllib3.util.ssl_</a>
+ &#8226;   <a href="#uuid">uuid</a>
 
   </div>
 
@@ -11772,7 +11747,6 @@ imported by:
  &#8226;   <a href="#inspect">inspect</a>
  &#8226;   <a href="#pkgutil">pkgutil</a>
  &#8226;   <a href="#requests.compat">requests.compat</a>
- &#8226;   <a href="#serial">serial</a>
  &#8226;   <a href="#setuptools._distutils">setuptools._distutils</a>
  &#8226;   <a href="#setuptools._vendor.importlib_metadata">setuptools._vendor.importlib_metadata</a>
  &#8226;   <a href="#setuptools._vendor.zipp.compat.overlay">setuptools._vendor.zipp.compat.overlay</a>
@@ -12363,6 +12337,7 @@ imported by:
  &#8226;   <a href="#importlib.metadata">importlib.metadata</a>
  &#8226;   <a href="#importlib.resources._common">importlib.resources._common</a>
  &#8226;   <a href="#pkgutil">pkgutil</a>
+ &#8226;   <a href="#psutil._common">psutil._common</a>
  &#8226;   <a href="#pydoc">pydoc</a>
  &#8226;   <a href="#pyi_rth_inspect.py">pyi_rth_inspect.py</a>
  &#8226;   <a href="#pystray._base">pystray._base</a>
@@ -12464,7 +12439,6 @@ imported by:
  &#8226;   <a href="#requests.models">requests.models</a>
  &#8226;   <a href="#requests.utils">requests.utils</a>
  &#8226;   <a href="#runpy">runpy</a>
- &#8226;   <a href="#serial.serialutil">serial.serialutil</a>
  &#8226;   <a href="#setuptools._vendor.backports.tarfile">setuptools._vendor.backports.tarfile</a>
  &#8226;   <a href="#setuptools._vendor.wheel.macosx_libfile">setuptools._vendor.wheel.macosx_libfile</a>
  &#8226;   <a href="#setuptools._vendor.wheel.wheelfile">setuptools._vendor.wheel.wheelfile</a>
@@ -12493,6 +12467,7 @@ imported by:
  &#8226;   <a href="#urllib3.response">urllib3.response</a>
  &#8226;   <a href="#urllib3.util.request">urllib3.util.request</a>
  &#8226;   <a href="#urllib3.util.ssltransport">urllib3.util.ssltransport</a>
+ &#8226;   <a href="#uuid">uuid</a>
  &#8226;   <a href="#xml.etree.ElementTree">xml.etree.ElementTree</a>
  &#8226;   <a href="#xml.sax">xml.sax</a>
  &#8226;   <a href="#xml.sax.saxutils">xml.sax.saxutils</a>
@@ -12515,7 +12490,8 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#urllib.parse">urllib.parse</a>
+    <a href="#psutil._common">psutil._common</a>
+ &#8226;   <a href="#urllib.parse">urllib.parse</a>
  &#8226;   <a href="#urllib.request">urllib.request</a>
  &#8226;   <a href="#urllib3.util.ssl_match_hostname">urllib3.util.ssl_match_hostname</a>
 
@@ -12661,7 +12637,6 @@ imported by:
  &#8226;   <a href="#json.decoder">json.decoder</a>
  &#8226;   <a href="#json.encoder">json.encoder</a>
  &#8226;   <a href="#json.scanner">json.scanner</a>
- &#8226;   <a href="#monitor.py">monitor.py</a>
  &#8226;   <a href="#multiprocessing.resource_tracker">multiprocessing.resource_tracker</a>
  &#8226;   <a href="#requests.compat">requests.compat</a>
  &#8226;   <a href="#setuptools._vendor.importlib_metadata">setuptools._vendor.importlib_metadata</a>
@@ -14135,6 +14110,9 @@ imported by:
  &#8226;   <a href="#pkgutil">pkgutil</a>
  &#8226;   <a href="#platform">platform</a>
  &#8226;   <a href="#posixpath">posixpath</a>
+ &#8226;   <a href="#psutil">psutil</a>
+ &#8226;   <a href="#psutil._common">psutil._common</a>
+ &#8226;   <a href="#psutil._pswindows">psutil._pswindows</a>
  &#8226;   <a href="#py_compile">py_compile</a>
  &#8226;   <a href="#pydoc">pydoc</a>
  &#8226;   <a href="#pyi_rth__tkinter.py">pyi_rth__tkinter.py</a>
@@ -14149,12 +14127,6 @@ imported by:
  &#8226;   <a href="#requests.sessions">requests.sessions</a>
  &#8226;   <a href="#requests.utils">requests.utils</a>
  &#8226;   <a href="#runpy">runpy</a>
- &#8226;   <a href="#serial">serial</a>
- &#8226;   <a href="#serial.serialposix">serial.serialposix</a>
- &#8226;   <a href="#serial.tools.list_ports">serial.tools.list_ports</a>
- &#8226;   <a href="#serial.tools.list_ports_common">serial.tools.list_ports_common</a>
- &#8226;   <a href="#serial.tools.list_ports_linux">serial.tools.list_ports_linux</a>
- &#8226;   <a href="#serial.tools.list_ports_posix">serial.tools.list_ports_posix</a>
  &#8226;   <a href="#setuptools">setuptools</a>
  &#8226;   <a href="#setuptools._core_metadata">setuptools._core_metadata</a>
  &#8226;   <a href="#setuptools._distutils.archive_util">setuptools._distutils.archive_util</a>
@@ -14225,6 +14197,7 @@ imported by:
  &#8226;   <a href="#urllib3.contrib.emscripten.connection">urllib3.contrib.emscripten.connection</a>
  &#8226;   <a href="#urllib3.filepost">urllib3.filepost</a>
  &#8226;   <a href="#urllib3.util.ssl_">urllib3.util.ssl_</a>
+ &#8226;   <a href="#uuid">uuid</a>
  &#8226;   <a href="#webbrowser">webbrowser</a>
  &#8226;   <a href="#xml.sax">xml.sax</a>
  &#8226;   <a href="#xml.sax.saxutils">xml.sax.saxutils</a>
@@ -14251,7 +14224,6 @@ imported by:
  &#8226;   <a href="#pkgutil">pkgutil</a>
  &#8226;   <a href="#py_compile">py_compile</a>
  &#8226;   <a href="#requests.adapters">requests.adapters</a>
- &#8226;   <a href="#serial.tools.list_ports_common">serial.tools.list_ports_common</a>
  &#8226;   <a href="#setuptools._distutils._modified">setuptools._distutils._modified</a>
  &#8226;   <a href="#setuptools._distutils.file_util">setuptools._distutils.file_util</a>
  &#8226;   <a href="#setuptools._vendor.wheel.wheelfile">setuptools._vendor.wheel.wheelfile</a>
@@ -14828,6 +14800,7 @@ imported by:
  &#8226;   <a href="#setuptools.monkey">setuptools.monkey</a>
  &#8226;   <a href="#setuptools.msvc">setuptools.msvc</a>
  &#8226;   <a href="#setuptools.windows_support">setuptools.windows_support</a>
+ &#8226;   <a href="#uuid">uuid</a>
 
   </div>
 
@@ -14914,6 +14887,137 @@ imported by:
 </div>
 
 <div class="node">
+  <a name="psutil"></a>
+  <a target="code" href="///C:/Users/cleiton/AppData/Roaming/Python/Python314/site-packages/psutil/__init__.py" type="text/plain"><tt>psutil</tt></a>
+<span class="moduletype">Package</span>  <div class="import">
+imports:
+    <a href="#collections">collections</a>
+ &#8226;   <a href="#contextlib">contextlib</a>
+ &#8226;   <a href="#datetime">datetime</a>
+ &#8226;   <a href="#functools">functools</a>
+ &#8226;   <a href="#os">os</a>
+ &#8226;   <a href="#psutil">psutil</a>
+ &#8226;   <a href="#psutil._common">psutil._common</a>
+ &#8226;   <a href="#psutil._ntuples">psutil._ntuples</a>
+ &#8226;   <a href="#psutil._psutil_windows">psutil._psutil_windows</a>
+ &#8226;   <a href="#psutil._pswindows">psutil._pswindows</a>
+ &#8226;   <a href="#pwd">pwd</a>
+ &#8226;   <a href="#signal">signal</a>
+ &#8226;   <a href="#socket">socket</a>
+ &#8226;   <a href="#subprocess">subprocess</a>
+ &#8226;   <a href="#sys">sys</a>
+ &#8226;   <a href="#threading">threading</a>
+ &#8226;   <a href="#time">time</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#monitor.py">monitor.py</a>
+ &#8226;   <a href="#psutil">psutil</a>
+ &#8226;   <a href="#psutil._common">psutil._common</a>
+ &#8226;   <a href="#psutil._ntuples">psutil._ntuples</a>
+ &#8226;   <a href="#psutil._psutil_windows">psutil._psutil_windows</a>
+ &#8226;   <a href="#psutil._pswindows">psutil._pswindows</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="psutil._common"></a>
+  <a target="code" href="///C:/Users/cleiton/AppData/Roaming/Python/Python314/site-packages/psutil/_common.py" type="text/plain"><tt>psutil._common</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#collections">collections</a>
+ &#8226;   <a href="#ctypes">ctypes</a>
+ &#8226;   <a href="#enum">enum</a>
+ &#8226;   <a href="#functools">functools</a>
+ &#8226;   <a href="#inspect">inspect</a>
+ &#8226;   <a href="#ipaddress">ipaddress</a>
+ &#8226;   <a href="#os">os</a>
+ &#8226;   <a href="#psutil">psutil</a>
+ &#8226;   <a href="#psutil._ntuples">psutil._ntuples</a>
+ &#8226;   <a href="#socket">socket</a>
+ &#8226;   <a href="#stat">stat</a>
+ &#8226;   <a href="#sys">sys</a>
+ &#8226;   <a href="#threading">threading</a>
+ &#8226;   <a href="#warnings">warnings</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#psutil">psutil</a>
+ &#8226;   <a href="#psutil._ntuples">psutil._ntuples</a>
+ &#8226;   <a href="#psutil._pswindows">psutil._pswindows</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="psutil._ntuples"></a>
+  <a target="code" href="///C:/Users/cleiton/AppData/Roaming/Python/Python314/site-packages/psutil/_ntuples.py" type="text/plain"><tt>psutil._ntuples</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#collections">collections</a>
+ &#8226;   <a href="#psutil">psutil</a>
+ &#8226;   <a href="#psutil._common">psutil._common</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#psutil">psutil</a>
+ &#8226;   <a href="#psutil._common">psutil._common</a>
+ &#8226;   <a href="#psutil._pswindows">psutil._pswindows</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="psutil._psutil_windows"></a>
+  <tt>psutil._psutil_windows</tt> <span class="moduletype"><tt>C:\Users\cleiton\AppData\Roaming\Python\Python314\site-packages\psutil\_psutil_windows.pyd</tt></span>  <div class="import">
+imports:
+    <a href="#psutil">psutil</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#psutil">psutil</a>
+ &#8226;   <a href="#psutil._pswindows">psutil._pswindows</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="psutil._pswindows"></a>
+  <a target="code" href="///C:/Users/cleiton/AppData/Roaming/Python/Python314/site-packages/psutil/_pswindows.py" type="text/plain"><tt>psutil._pswindows</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#contextlib">contextlib</a>
+ &#8226;   <a href="#enum">enum</a>
+ &#8226;   <a href="#functools">functools</a>
+ &#8226;   <a href="#os">os</a>
+ &#8226;   <a href="#psutil">psutil</a>
+ &#8226;   <a href="#psutil._common">psutil._common</a>
+ &#8226;   <a href="#psutil._ntuples">psutil._ntuples</a>
+ &#8226;   <a href="#psutil._psutil_windows">psutil._psutil_windows</a>
+ &#8226;   <a href="#signal">signal</a>
+ &#8226;   <a href="#sys">sys</a>
+ &#8226;   <a href="#threading">threading</a>
+ &#8226;   <a href="#time">time</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#psutil">psutil</a>
+
+  </div>
+
+</div>
+
+<div class="node">
   <a name="pwd"></a>
   <a target="code" href="" type="text/plain"><tt>pwd</tt></a>
 <span class="moduletype">MissingModule</span>  <div class="import">
@@ -14922,6 +15026,7 @@ imported by:
  &#8226;   <a href="#netrc">netrc</a>
  &#8226;   <a href="#pathlib">pathlib</a>
  &#8226;   <a href="#posixpath">posixpath</a>
+ &#8226;   <a href="#psutil">psutil</a>
  &#8226;   <a href="#setuptools._distutils.archive_util">setuptools._distutils.archive_util</a>
  &#8226;   <a href="#setuptools._distutils.util">setuptools._distutils.util</a>
  &#8226;   <a href="#setuptools._vendor.backports.tarfile">setuptools._vendor.backports.tarfile</a>
@@ -15494,6 +15599,7 @@ imported by:
  &#8226;   <a href="#statistics">statistics</a>
  &#8226;   <a href="#tempfile">tempfile</a>
  &#8226;   <a href="#urllib3.util.retry">urllib3.util.retry</a>
+ &#8226;   <a href="#uuid">uuid</a>
 
   </div>
 
@@ -15606,9 +15712,6 @@ imported by:
  &#8226;   <a href="#requests.auth">requests.auth</a>
  &#8226;   <a href="#requests.utils">requests.utils</a>
  &#8226;   <a href="#rlcompleter">rlcompleter</a>
- &#8226;   <a href="#serial.tools.list_ports">serial.tools.list_ports</a>
- &#8226;   <a href="#serial.tools.list_ports_common">serial.tools.list_ports_common</a>
- &#8226;   <a href="#serial.tools.list_ports_windows">serial.tools.list_ports_windows</a>
  &#8226;   <a href="#setuptools._distutils.cmd">setuptools._distutils.cmd</a>
  &#8226;   <a href="#setuptools._distutils.command.build_ext">setuptools._distutils.command.build_ext</a>
  &#8226;   <a href="#setuptools._distutils.compilers.C.base">setuptools._distutils.compilers.C.base</a>
@@ -16342,7 +16445,6 @@ imported by:
  &#8226;   <a href="#http.server">http.server</a>
  &#8226;   <a href="#pydoc">pydoc</a>
  &#8226;   <a href="#selectors">selectors</a>
- &#8226;   <a href="#serial.serialposix">serial.serialposix</a>
  &#8226;   <a href="#subprocess">subprocess</a>
  &#8226;   <a href="#urllib3.util.wait">urllib3.util.wait</a>
 
@@ -16372,327 +16474,6 @@ imported by:
  &#8226;   <a href="#socket">socket</a>
  &#8226;   <a href="#socketserver">socketserver</a>
  &#8226;   <a href="#subprocess">subprocess</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="serial"></a>
-  <a target="code" href="///C:/Users/cleiton/AppData/Roaming/Python/Python314/site-packages/serial/__init__.py" type="text/plain"><tt>serial</tt></a>
-<span class="moduletype">Package</span>  <div class="import">
-imports:
-    <a href="#__future__">__future__</a>
- &#8226;   <a href="#importlib">importlib</a>
- &#8226;   <a href="#os">os</a>
- &#8226;   <a href="#serial.serialcli">serial.serialcli</a>
- &#8226;   <a href="#serial.serialjava">serial.serialjava</a>
- &#8226;   <a href="#serial.serialposix">serial.serialposix</a>
- &#8226;   <a href="#serial.serialutil">serial.serialutil</a>
- &#8226;   <a href="#serial.serialwin32">serial.serialwin32</a>
- &#8226;   <a href="#serial.win32">serial.win32</a>
- &#8226;   <a href="#sys">sys</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#serial.serialcli">serial.serialcli</a>
- &#8226;   <a href="#serial.serialjava">serial.serialjava</a>
- &#8226;   <a href="#serial.serialposix">serial.serialposix</a>
- &#8226;   <a href="#serial.serialutil">serial.serialutil</a>
- &#8226;   <a href="#serial.serialwin32">serial.serialwin32</a>
- &#8226;   <a href="#serial.tools">serial.tools</a>
- &#8226;   <a href="#serial.tools.list_ports_posix">serial.tools.list_ports_posix</a>
- &#8226;   <a href="#serial.tools.list_ports_windows">serial.tools.list_ports_windows</a>
- &#8226;   <a href="#serial.win32">serial.win32</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="serial.serialcli"></a>
-  <a target="code" href="///C:/Users/cleiton/AppData/Roaming/Python/Python314/site-packages/serial/serialcli.py" type="text/plain"><tt>serial.serialcli</tt></a>
-<span class="moduletype">SourceModule</span>  <div class="import">
-imports:
-    <a href="#'System.IO'">'System.IO'</a>
- &#8226;   <a href="#System">System</a>
- &#8226;   <a href="#__future__">__future__</a>
- &#8226;   <a href="#serial">serial</a>
- &#8226;   <a href="#serial.serialutil">serial.serialutil</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#serial">serial</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="serial.serialjava"></a>
-  <a target="code" href="///C:/Users/cleiton/AppData/Roaming/Python/Python314/site-packages/serial/serialjava.py" type="text/plain"><tt>serial.serialjava</tt></a>
-<span class="moduletype">SourceModule</span>  <div class="import">
-imports:
-    <a href="#__future__">__future__</a>
- &#8226;   <a href="#serial">serial</a>
- &#8226;   <a href="#serial.serialutil">serial.serialutil</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#serial">serial</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="serial.serialposix"></a>
-  <a target="code" href="///C:/Users/cleiton/AppData/Roaming/Python/Python314/site-packages/serial/serialposix.py" type="text/plain"><tt>serial.serialposix</tt></a>
-<span class="moduletype">SourceModule</span>  <div class="import">
-imports:
-    <a href="#__future__">__future__</a>
- &#8226;   <a href="#array">array</a>
- &#8226;   <a href="#errno">errno</a>
- &#8226;   <a href="#fcntl">fcntl</a>
- &#8226;   <a href="#os">os</a>
- &#8226;   <a href="#select">select</a>
- &#8226;   <a href="#serial">serial</a>
- &#8226;   <a href="#serial.serialutil">serial.serialutil</a>
- &#8226;   <a href="#struct">struct</a>
- &#8226;   <a href="#sys">sys</a>
- &#8226;   <a href="#termios">termios</a>
- &#8226;   <a href="#warnings">warnings</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#serial">serial</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="serial.serialutil"></a>
-  <a target="code" href="///C:/Users/cleiton/AppData/Roaming/Python/Python314/site-packages/serial/serialutil.py" type="text/plain"><tt>serial.serialutil</tt></a>
-<span class="moduletype">SourceModule</span>  <div class="import">
-imports:
-    <a href="#__future__">__future__</a>
- &#8226;   <a href="#array">array</a>
- &#8226;   <a href="#io">io</a>
- &#8226;   <a href="#serial">serial</a>
- &#8226;   <a href="#sys">sys</a>
- &#8226;   <a href="#time">time</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#serial">serial</a>
- &#8226;   <a href="#serial.serialcli">serial.serialcli</a>
- &#8226;   <a href="#serial.serialjava">serial.serialjava</a>
- &#8226;   <a href="#serial.serialposix">serial.serialposix</a>
- &#8226;   <a href="#serial.serialwin32">serial.serialwin32</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="serial.serialwin32"></a>
-  <a target="code" href="///C:/Users/cleiton/AppData/Roaming/Python/Python314/site-packages/serial/serialwin32.py" type="text/plain"><tt>serial.serialwin32</tt></a>
-<span class="moduletype">SourceModule</span>  <div class="import">
-imports:
-    <a href="#__future__">__future__</a>
- &#8226;   <a href="#ctypes">ctypes</a>
- &#8226;   <a href="#serial">serial</a>
- &#8226;   <a href="#serial.serialutil">serial.serialutil</a>
- &#8226;   <a href="#serial.win32">serial.win32</a>
- &#8226;   <a href="#time">time</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#serial">serial</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="serial.tools"></a>
-  <a target="code" href="///C:/Users/cleiton/AppData/Roaming/Python/Python314/site-packages/serial/tools/__init__.py" type="text/plain"><tt>serial.tools</tt></a>
-<span class="moduletype">Package</span>  <div class="import">
-imports:
-    <a href="#serial">serial</a>
- &#8226;   <a href="#serial.tools.list_ports_common">serial.tools.list_ports_common</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#serial.tools.list_ports">serial.tools.list_ports</a>
- &#8226;   <a href="#serial.tools.list_ports_common">serial.tools.list_ports_common</a>
- &#8226;   <a href="#serial.tools.list_ports_linux">serial.tools.list_ports_linux</a>
- &#8226;   <a href="#serial.tools.list_ports_osx">serial.tools.list_ports_osx</a>
- &#8226;   <a href="#serial.tools.list_ports_posix">serial.tools.list_ports_posix</a>
- &#8226;   <a href="#serial.tools.list_ports_windows">serial.tools.list_ports_windows</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="serial.tools.list_ports"></a>
-  <a target="code" href="///C:/Users/cleiton/AppData/Roaming/Python/Python314/site-packages/serial/tools/list_ports.py" type="text/plain"><tt>serial.tools.list_ports</tt></a>
-<span class="moduletype">SourceModule</span>  <div class="import">
-imports:
-    <a href="#__future__">__future__</a>
- &#8226;   <a href="#argparse">argparse</a>
- &#8226;   <a href="#os">os</a>
- &#8226;   <a href="#re">re</a>
- &#8226;   <a href="#serial.tools">serial.tools</a>
- &#8226;   <a href="#serial.tools.list_ports_posix">serial.tools.list_ports_posix</a>
- &#8226;   <a href="#serial.tools.list_ports_windows">serial.tools.list_ports_windows</a>
- &#8226;   <a href="#sys">sys</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#monitor.py">monitor.py</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="serial.tools.list_ports_common"></a>
-  <a target="code" href="///C:/Users/cleiton/AppData/Roaming/Python/Python314/site-packages/serial/tools/list_ports_common.py" type="text/plain"><tt>serial.tools.list_ports_common</tt></a>
-<span class="moduletype">SourceModule</span>  <div class="import">
-imports:
-    <a href="#__future__">__future__</a>
- &#8226;   <a href="#glob">glob</a>
- &#8226;   <a href="#os">os</a>
- &#8226;   <a href="#os.path">os.path</a>
- &#8226;   <a href="#re">re</a>
- &#8226;   <a href="#serial.tools">serial.tools</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#serial.tools">serial.tools</a>
- &#8226;   <a href="#serial.tools.list_ports_linux">serial.tools.list_ports_linux</a>
- &#8226;   <a href="#serial.tools.list_ports_osx">serial.tools.list_ports_osx</a>
- &#8226;   <a href="#serial.tools.list_ports_posix">serial.tools.list_ports_posix</a>
- &#8226;   <a href="#serial.tools.list_ports_windows">serial.tools.list_ports_windows</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="serial.tools.list_ports_linux"></a>
-  <a target="code" href="///C:/Users/cleiton/AppData/Roaming/Python/Python314/site-packages/serial/tools/list_ports_linux.py" type="text/plain"><tt>serial.tools.list_ports_linux</tt></a>
-<span class="moduletype">SourceModule</span>  <div class="import">
-imports:
-    <a href="#__future__">__future__</a>
- &#8226;   <a href="#glob">glob</a>
- &#8226;   <a href="#os">os</a>
- &#8226;   <a href="#serial.tools">serial.tools</a>
- &#8226;   <a href="#serial.tools.list_ports_common">serial.tools.list_ports_common</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#serial.tools.list_ports_posix">serial.tools.list_ports_posix</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="serial.tools.list_ports_osx"></a>
-  <a target="code" href="///C:/Users/cleiton/AppData/Roaming/Python/Python314/site-packages/serial/tools/list_ports_osx.py" type="text/plain"><tt>serial.tools.list_ports_osx</tt></a>
-<span class="moduletype">SourceModule</span>  <div class="import">
-imports:
-    <a href="#__future__">__future__</a>
- &#8226;   <a href="#ctypes">ctypes</a>
- &#8226;   <a href="#serial.tools">serial.tools</a>
- &#8226;   <a href="#serial.tools.list_ports_common">serial.tools.list_ports_common</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#serial.tools.list_ports_posix">serial.tools.list_ports_posix</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="serial.tools.list_ports_posix"></a>
-  <a target="code" href="///C:/Users/cleiton/AppData/Roaming/Python/Python314/site-packages/serial/tools/list_ports_posix.py" type="text/plain"><tt>serial.tools.list_ports_posix</tt></a>
-<span class="moduletype">SourceModule</span>  <div class="import">
-imports:
-    <a href="#__future__">__future__</a>
- &#8226;   <a href="#glob">glob</a>
- &#8226;   <a href="#os">os</a>
- &#8226;   <a href="#serial">serial</a>
- &#8226;   <a href="#serial.tools">serial.tools</a>
- &#8226;   <a href="#serial.tools.list_ports_common">serial.tools.list_ports_common</a>
- &#8226;   <a href="#serial.tools.list_ports_linux">serial.tools.list_ports_linux</a>
- &#8226;   <a href="#serial.tools.list_ports_osx">serial.tools.list_ports_osx</a>
- &#8226;   <a href="#sys">sys</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#serial.tools.list_ports">serial.tools.list_ports</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="serial.tools.list_ports_windows"></a>
-  <a target="code" href="///C:/Users/cleiton/AppData/Roaming/Python/Python314/site-packages/serial/tools/list_ports_windows.py" type="text/plain"><tt>serial.tools.list_ports_windows</tt></a>
-<span class="moduletype">SourceModule</span>  <div class="import">
-imports:
-    <a href="#__future__">__future__</a>
- &#8226;   <a href="#ctypes">ctypes</a>
- &#8226;   <a href="#ctypes.wintypes">ctypes.wintypes</a>
- &#8226;   <a href="#re">re</a>
- &#8226;   <a href="#serial">serial</a>
- &#8226;   <a href="#serial.tools">serial.tools</a>
- &#8226;   <a href="#serial.tools.list_ports_common">serial.tools.list_ports_common</a>
- &#8226;   <a href="#serial.win32">serial.win32</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#serial.tools.list_ports">serial.tools.list_ports</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="serial.win32"></a>
-  <a target="code" href="///C:/Users/cleiton/AppData/Roaming/Python/Python314/site-packages/serial/win32.py" type="text/plain"><tt>serial.win32</tt></a>
-<span class="moduletype">SourceModule</span>  <div class="import">
-imports:
-    <a href="#__future__">__future__</a>
- &#8226;   <a href="#ctypes">ctypes</a>
- &#8226;   <a href="#ctypes.wintypes">ctypes.wintypes</a>
- &#8226;   <a href="#serial">serial</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#serial">serial</a>
- &#8226;   <a href="#serial.serialwin32">serial.serialwin32</a>
- &#8226;   <a href="#serial.tools.list_ports_windows">serial.tools.list_ports_windows</a>
 
   </div>
 
@@ -20541,6 +20322,7 @@ imported by:
  &#8226;   <a href="#setuptools.compat.py311">setuptools.compat.py311</a>
  &#8226;   <a href="#tarfile">tarfile</a>
  &#8226;   <a href="#tempfile">tempfile</a>
+ &#8226;   <a href="#uuid">uuid</a>
  &#8226;   <a href="#webbrowser">webbrowser</a>
  &#8226;   <a href="#zipfile">zipfile</a>
 
@@ -20573,6 +20355,8 @@ imported by:
  &#8226;   <a href="#multiprocessing.process">multiprocessing.process</a>
  &#8226;   <a href="#multiprocessing.resource_sharer">multiprocessing.resource_sharer</a>
  &#8226;   <a href="#multiprocessing.resource_tracker">multiprocessing.resource_tracker</a>
+ &#8226;   <a href="#psutil">psutil</a>
+ &#8226;   <a href="#psutil._pswindows">psutil._pswindows</a>
  &#8226;   <a href="#pystray._darwin">pystray._darwin</a>
  &#8226;   <a href="#pystray._util.gtk">pystray._util.gtk</a>
  &#8226;   <a href="#subprocess">subprocess</a>
@@ -20735,11 +20519,14 @@ imported by:
  &#8226;   <a href="#ftplib">ftplib</a>
  &#8226;   <a href="#http.client">http.client</a>
  &#8226;   <a href="#http.server">http.server</a>
+ &#8226;   <a href="#monitor.py">monitor.py</a>
  &#8226;   <a href="#multiprocessing.connection">multiprocessing.connection</a>
  &#8226;   <a href="#multiprocessing.forkserver">multiprocessing.forkserver</a>
  &#8226;   <a href="#multiprocessing.reduction">multiprocessing.reduction</a>
  &#8226;   <a href="#multiprocessing.resource_sharer">multiprocessing.resource_sharer</a>
  &#8226;   <a href="#platform">platform</a>
+ &#8226;   <a href="#psutil">psutil</a>
+ &#8226;   <a href="#psutil._common">psutil._common</a>
  &#8226;   <a href="#requests.adapters">requests.adapters</a>
  &#8226;   <a href="#requests.utils">requests.utils</a>
  &#8226;   <a href="#socketserver">socketserver</a>
@@ -20756,6 +20543,7 @@ imported by:
  &#8226;   <a href="#urllib3.util.ssltransport">urllib3.util.ssltransport</a>
  &#8226;   <a href="#urllib3.util.timeout">urllib3.util.timeout</a>
  &#8226;   <a href="#urllib3.util.wait">urllib3.util.wait</a>
+ &#8226;   <a href="#uuid">uuid</a>
 
   </div>
 
@@ -20912,6 +20700,7 @@ imported by:
  &#8226;   <a href="#pathlib">pathlib</a>
  &#8226;   <a href="#pathlib._os">pathlib._os</a>
  &#8226;   <a href="#posixpath">posixpath</a>
+ &#8226;   <a href="#psutil._common">psutil._common</a>
  &#8226;   <a href="#setuptools._core_metadata">setuptools._core_metadata</a>
  &#8226;   <a href="#setuptools._distutils.file_util">setuptools._distutils.file_util</a>
  &#8226;   <a href="#setuptools._shutil">setuptools._shutil</a>
@@ -21041,7 +20830,6 @@ imported by:
  &#8226;   <a href="#pickle">pickle</a>
  &#8226;   <a href="#platform">platform</a>
  &#8226;   <a href="#requests.utils">requests.utils</a>
- &#8226;   <a href="#serial.serialposix">serial.serialposix</a>
  &#8226;   <a href="#setuptools._vendor.backports.tarfile">setuptools._vendor.backports.tarfile</a>
  &#8226;   <a href="#setuptools._vendor.packaging._elffile">setuptools._vendor.packaging._elffile</a>
  &#8226;   <a href="#setuptools._vendor.packaging.tags">setuptools._vendor.packaging.tags</a>
@@ -21099,13 +20887,13 @@ imported by:
  &#8226;   <a href="#ctypes._aix">ctypes._aix</a>
  &#8226;   <a href="#ctypes.util">ctypes.util</a>
  &#8226;   <a href="#http.server">http.server</a>
- &#8226;   <a href="#monitor.py">monitor.py</a>
  &#8226;   <a href="#multiprocessing.popen_spawn_win32">multiprocessing.popen_spawn_win32</a>
  &#8226;   <a href="#multiprocessing.util">multiprocessing.util</a>
  &#8226;   <a href="#os">os</a>
  &#8226;   <a href="#packaging._musllinux">packaging._musllinux</a>
  &#8226;   <a href="#packaging.tags">packaging.tags</a>
  &#8226;   <a href="#platform">platform</a>
+ &#8226;   <a href="#psutil">psutil</a>
  &#8226;   <a href="#pyi_rth_multiprocessing.py">pyi_rth_multiprocessing.py</a>
  &#8226;   <a href="#pystray._darwin">pystray._darwin</a>
  &#8226;   <a href="#setuptools._distutils.compilers.C.msvc">setuptools._distutils.compilers.C.msvc</a>
@@ -21115,6 +20903,7 @@ imported by:
  &#8226;   <a href="#setuptools._vendor.packaging._musllinux">setuptools._vendor.packaging._musllinux</a>
  &#8226;   <a href="#setuptools._vendor.packaging.tags">setuptools._vendor.packaging.tags</a>
  &#8226;   <a href="#setuptools.installer">setuptools.installer</a>
+ &#8226;   <a href="#uuid">uuid</a>
  &#8226;   <a href="#webbrowser">webbrowser</a>
 
   </div>
@@ -21219,7 +21008,6 @@ imported by:
  &#8226;   <a href="#locale">locale</a>
  &#8226;   <a href="#logging">logging</a>
  &#8226;   <a href="#mimetypes">mimetypes</a>
- &#8226;   <a href="#monitor.py">monitor.py</a>
  &#8226;   <a href="#multiprocessing">multiprocessing</a>
  &#8226;   <a href="#multiprocessing.connection">multiprocessing.connection</a>
  &#8226;   <a href="#multiprocessing.context">multiprocessing.context</a>
@@ -21250,6 +21038,9 @@ imported by:
  &#8226;   <a href="#platform">platform</a>
  &#8226;   <a href="#posixpath">posixpath</a>
  &#8226;   <a href="#pprint">pprint</a>
+ &#8226;   <a href="#psutil">psutil</a>
+ &#8226;   <a href="#psutil._common">psutil._common</a>
+ &#8226;   <a href="#psutil._pswindows">psutil._pswindows</a>
  &#8226;   <a href="#py_compile">py_compile</a>
  &#8226;   <a href="#pydoc">pydoc</a>
  &#8226;   <a href="#pyi_rth__tkinter.py">pyi_rth__tkinter.py</a>
@@ -21266,11 +21057,6 @@ imported by:
  &#8226;   <a href="#requests.utils">requests.utils</a>
  &#8226;   <a href="#runpy">runpy</a>
  &#8226;   <a href="#selectors">selectors</a>
- &#8226;   <a href="#serial">serial</a>
- &#8226;   <a href="#serial.serialposix">serial.serialposix</a>
- &#8226;   <a href="#serial.serialutil">serial.serialutil</a>
- &#8226;   <a href="#serial.tools.list_ports">serial.tools.list_ports</a>
- &#8226;   <a href="#serial.tools.list_ports_posix">serial.tools.list_ports_posix</a>
  &#8226;   <a href="#setuptools">setuptools</a>
  &#8226;   <a href="#setuptools._distutils">setuptools._distutils</a>
  &#8226;   <a href="#setuptools._distutils.cmd">setuptools._distutils.cmd</a>
@@ -21354,6 +21140,7 @@ imported by:
  &#8226;   <a href="#urllib3.response">urllib3.response</a>
  &#8226;   <a href="#urllib3.util.request">urllib3.util.request</a>
  &#8226;   <a href="#urllib3.util.ssl_">urllib3.util.ssl_</a>
+ &#8226;   <a href="#uuid">uuid</a>
  &#8226;   <a href="#warnings">warnings</a>
  &#8226;   <a href="#weakref">weakref</a>
  &#8226;   <a href="#webbrowser">webbrowser</a>
@@ -21502,7 +21289,6 @@ imported by:
  &#8226;   <a href="#_pyrepl.pager">_pyrepl.pager</a>
  &#8226;   <a href="#_pyrepl.unix_console">_pyrepl.unix_console</a>
  &#8226;   <a href="#_pyrepl.unix_eventqueue">_pyrepl.unix_eventqueue</a>
- &#8226;   <a href="#serial.serialposix">serial.serialposix</a>
  &#8226;   <a href="#tty">tty</a>
 
   </div>
@@ -21587,6 +21373,9 @@ imported by:
  &#8226;   <a href="#multiprocessing.resource_tracker">multiprocessing.resource_tracker</a>
  &#8226;   <a href="#multiprocessing.synchronize">multiprocessing.synchronize</a>
  &#8226;   <a href="#multiprocessing.util">multiprocessing.util</a>
+ &#8226;   <a href="#psutil">psutil</a>
+ &#8226;   <a href="#psutil._common">psutil._common</a>
+ &#8226;   <a href="#psutil._pswindows">psutil._pswindows</a>
  &#8226;   <a href="#pydoc">pydoc</a>
  &#8226;   <a href="#pystray._base">pystray._base</a>
  &#8226;   <a href="#pystray._win32">pystray._win32</a>
@@ -21645,14 +21434,14 @@ imported by:
  &#8226;   <a href="#multiprocessing.pool">multiprocessing.pool</a>
  &#8226;   <a href="#multiprocessing.queues">multiprocessing.queues</a>
  &#8226;   <a href="#multiprocessing.synchronize">multiprocessing.synchronize</a>
+ &#8226;   <a href="#psutil">psutil</a>
+ &#8226;   <a href="#psutil._pswindows">psutil._pswindows</a>
  &#8226;   <a href="#pydoc">pydoc</a>
  &#8226;   <a href="#queue">queue</a>
  &#8226;   <a href="#random">random</a>
  &#8226;   <a href="#requests.auth">requests.auth</a>
  &#8226;   <a href="#requests.cookies">requests.cookies</a>
  &#8226;   <a href="#requests.sessions">requests.sessions</a>
- &#8226;   <a href="#serial.serialutil">serial.serialutil</a>
- &#8226;   <a href="#serial.serialwin32">serial.serialwin32</a>
  &#8226;   <a href="#setuptools._vendor.backports.tarfile">setuptools._vendor.backports.tarfile</a>
  &#8226;   <a href="#setuptools._vendor.jaraco.functools">setuptools._vendor.jaraco.functools</a>
  &#8226;   <a href="#setuptools._vendor.more_itertools.more">setuptools._vendor.more_itertools.more</a>
@@ -21668,6 +21457,7 @@ imported by:
  &#8226;   <a href="#urllib.request">urllib.request</a>
  &#8226;   <a href="#urllib3.util.retry">urllib3.util.retry</a>
  &#8226;   <a href="#urllib3.util.timeout">urllib3.util.timeout</a>
+ &#8226;   <a href="#uuid">uuid</a>
  &#8226;   <a href="#xmlrpc.client">xmlrpc.client</a>
  &#8226;   <a href="#zipfile">zipfile</a>
  &#8226;   <a href="#zipimport">zipimport</a>
@@ -23896,6 +23686,34 @@ imported by:
 </div>
 
 <div class="node">
+  <a name="uuid"></a>
+  <a target="code" href="///C:/Program%20Files/Python314/Lib/uuid.py" type="text/plain"><tt>uuid</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#_uuid">_uuid</a>
+ &#8226;   <a href="#argparse">argparse</a>
+ &#8226;   <a href="#enum">enum</a>
+ &#8226;   <a href="#hashlib">hashlib</a>
+ &#8226;   <a href="#io">io</a>
+ &#8226;   <a href="#os">os</a>
+ &#8226;   <a href="#platform">platform</a>
+ &#8226;   <a href="#random">random</a>
+ &#8226;   <a href="#shutil">shutil</a>
+ &#8226;   <a href="#socket">socket</a>
+ &#8226;   <a href="#subprocess">subprocess</a>
+ &#8226;   <a href="#sys">sys</a>
+ &#8226;   <a href="#time">time</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#monitor.py">monitor.py</a>
+
+  </div>
+
+</div>
+
+<div class="node">
   <a name="vms_lib"></a>
   <a target="code" href="" type="text/plain"><tt>vms_lib</tt></a>
 <span class="moduletype">MissingModule</span>  <div class="import">
@@ -23977,6 +23795,7 @@ imported by:
  &#8226;   <a href="#packaging.version">packaging.version</a>
  &#8226;   <a href="#pathlib">pathlib</a>
  &#8226;   <a href="#platform">platform</a>
+ &#8226;   <a href="#psutil._common">psutil._common</a>
  &#8226;   <a href="#pydoc">pydoc</a>
  &#8226;   <a href="#random">random</a>
  &#8226;   <a href="#re">re</a>
@@ -23987,7 +23806,6 @@ imported by:
  &#8226;   <a href="#requests.utils">requests.utils</a>
  &#8226;   <a href="#rlcompleter">rlcompleter</a>
  &#8226;   <a href="#runpy">runpy</a>
- &#8226;   <a href="#serial.serialposix">serial.serialposix</a>
  &#8226;   <a href="#setuptools._distutils._msvccompiler">setuptools._distutils._msvccompiler</a>
  &#8226;   <a href="#setuptools._distutils.command.bdist">setuptools._distutils.command.bdist</a>
  &#8226;   <a href="#setuptools._distutils.compilers.C.base">setuptools._distutils.compilers.C.base</a>
