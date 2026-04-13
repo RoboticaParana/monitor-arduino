@@ -1,5 +1,5 @@
 @echo off
-title BUILDER B1N0 v7.0
+title BUILDER B1N0 v7.1
 color 0B
 chcp 65001 >nul
 setlocal EnableDelayedExpansion
@@ -13,7 +13,7 @@ for %%G in (
     "C:\Program Files\Inno Setup 6\ISCC.exe"
 ) do (if exist %%G set INNO=%%G)
 
-set VERSAO=7.0
+set VERSAO=7.1
 
 echo [1/3] Sincronizando GitHub v!VERSAO!...
 echo {"version": "!VERSAO!", "url": "https://github.com/RoboticaParana/monitor-arduino/releases/download/v!VERSAO!/monitor.exe"} > version.json
