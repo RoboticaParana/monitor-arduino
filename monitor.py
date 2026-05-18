@@ -5,9 +5,9 @@ from PIL import Image
 import pystray
 import tkinter as tk
 
-VERSION = "7.4.10"
+VERSION = "7.4.11"
 ADMIN_PASS = "robotic@p@r@n@" 
-URL_PLANILHA = "https://script.google.com/macros/s/AKfycbxDiys_7p3BFqwuq-GJ-pe_Fn0q6cIiVCBkXwKTp2Ft5Mqkud6nFeMCdR3DYsbu49XB/exec" # COLE AQUI A MESMA URL DA EXTENSÃƒO
+URL_PLANILHA = "https://script.google.com/macros/s/AKfycbxDiys_7p3BFqwuq-GJ-pe_Fn0q6cIiVCBkXwKTp2Ft5Mqkud6nFeMCdR3DYsbu49XB/exec" # COLE AQUI A MESMA URL DA EXTENSÃƒÆ’O
 
 
 # Em build --onefile, __file__ pode apontar para uma pasta temporaria do PyInstaller.
@@ -15,7 +15,6 @@ BASE_DIR = os.path.dirname(sys.executable) if getattr(sys, "frozen", False) else
 ICON_PATH = os.path.join(BASE_DIR, "mascote.ico")
 LOG_FILE = os.path.join(BASE_DIR, "agente_b1n0.log")
 UPLOAD_PROCESSOS = {
-    "arduino-cli.exe": "Arduino IDE",
     "avrdude.exe": "Arduino/AVR",
     "esptool.exe": "ESP",
     "esptool.py": "ESP",
@@ -24,8 +23,7 @@ UPLOAD_PROCESSOS = {
     "openocd.exe": "OpenOCD",
     "mbuild.exe": "mBlock",
 }
-UPLOAD_ASSINATURAS_CMD = {
-    "arduino-cli": "Arduino IDE",
+UPLOAD_ASSINATURAS_FORTES = {
     "avrdude": "Arduino/AVR",
     "esptool": "ESP",
     "bossac": "Arduino/SAMD",
@@ -69,12 +67,12 @@ def obter_ip_local():
     except Exception:
         return "N/D"
 
-def enviar_para_planilha(evento, plataforma, detalhe=""):
+def enviar_para_planilha(evento, plataforma, detalhe="", placa="Nao identificada"):
     dados = {
         "id": int(time.time() * 1000),
         "data": datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
         "evento": f"{evento} de um dispositivo Windows ({plataforma})",
-        "placa": "Detectada via Software",
+        "placa": placa,
         "serial": obter_id_unico(),
         "ip_publico": "Buscando...",
         "ip_local": obter_ip_local(),
@@ -86,6 +84,14 @@ def enviar_para_planilha(evento, plataforma, detalhe=""):
         registrar_log(f"ENVIO {evento} | {plataforma} | HTTP {response.status_code} | {detalhe}")
     except Exception as e:
         registrar_log(f"FALHA ENVIO {evento} | {plataforma} | {e}")
+
+def identificar_placa(cmdline):
+    cmd_lower = " ".join(cmdline or []).lower()
+    if "esp01" in cmd_lower or "esp-01" in cmd_lower or "generic:esp8266" in cmd_lower or "esp8266" in cmd_lower or " esptool" in f" {cmd_lower} ":
+        return "ESP-01/ESP8266"
+    if "arduino:avr:uno" in cmd_lower or " atmega328p" in f" {cmd_lower} ":
+        return "Arduino Uno"
+    return "Nao identificada"
 
 def descrever_contexto_app():
     try:
@@ -103,7 +109,12 @@ def identificar_upload(nome, cmdline):
     cmd_lower = " ".join(cmdline or []).lower()
     if nome_lower in UPLOAD_PROCESSOS_LOWER:
         return UPLOAD_PROCESSOS_LOWER[nome_lower]
-    for assinatura, plataforma in UPLOAD_ASSINATURAS_CMD.items():
+    if "arduino-cli" in cmd_lower:
+        if " daemon " in f" {cmd_lower} ":
+            return None
+        if " upload " in f" {cmd_lower} ":
+            return "Arduino IDE"
+    for assinatura, plataforma in UPLOAD_ASSINATURAS_FORTES.items():
         if assinatura in cmd_lower:
             return plataforma
     return None
@@ -122,8 +133,10 @@ def loop_principal():
                     chave = f"{nome.lower()}:{proc.info.get('pid')}"
                     if chave not in ultimo_envio or (agora - ultimo_envio[chave] > 30):
                         cmd_texto = " ".join(cmdline)
-                        detalhe = f"processo={nome}; app={descrever_contexto_app()}; cmd={cmd_texto[:400]}"
-                        enviar_para_planilha("UPLOAD", plataforma_upload, detalhe)
+                        placa = identificar_placa(cmdline)
+                        detalhe = f"ip_local={obter_ip_local()}; origem={plataforma_upload}; placa={placa}; processo={nome}"
+                        enviar_para_planilha("UPLOAD", plataforma_upload, detalhe, placa)
+                        registrar_log(f"UPLOAD | ip_local={obter_ip_local()} | origem={plataforma_upload} | placa={placa}")
                         ultimo_envio[chave] = agora
             time.sleep(10)
         except Exception as e:

@@ -6,7 +6,7 @@ MONITOR_EXE = os.path.join(BASE_DIR, "monitor.exe")
 VERSION_LOCAL_FILE = os.path.join(BASE_DIR, "version.local")
 LOG_FILE = os.path.join(BASE_DIR, "agente_b1n0_manager.log")
 URL_VERSION_JSON = "https://raw.githubusercontent.com/RoboticaParana/monitor-arduino/main/version.json"
-MONITOR_VERSION_EMBUTIDA = "7.4.10"
+MONITOR_VERSION_EMBUTIDA = "7.4.11"
 
 def registrar_log(mensagem):
     try:
