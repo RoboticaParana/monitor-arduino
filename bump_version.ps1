@@ -25,7 +25,8 @@ function Set-TextFile {
         [string]$Text
     )
     $normalized = $Text -replace "`r?`n", "`r`n"
-    [System.IO.File]::WriteAllText($Path, $normalized, [System.Text.Encoding]::UTF8)
+    $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+    [System.IO.File]::WriteAllText($Path, $normalized, $utf8NoBom)
 }
 
 $versionJson = @{ version = $newVersion; url = $newUrl } | ConvertTo-Json -Compress

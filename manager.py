@@ -1,4 +1,4 @@
-﻿import os, time, requests, subprocess, sys
+import os, time, requests, subprocess, sys, json
 
 # Em build --onefile, __file__ pode apontar para a pasta temporaria do PyInstaller.
 BASE_DIR = os.path.dirname(sys.executable) if getattr(sys, "frozen", False) else os.path.dirname(os.path.realpath(__file__))
@@ -6,7 +6,7 @@ MONITOR_EXE = os.path.join(BASE_DIR, "monitor.exe")
 VERSION_LOCAL_FILE = os.path.join(BASE_DIR, "version.local")
 LOG_FILE = os.path.join(BASE_DIR, "agente_b1n0_manager.log")
 URL_VERSION_JSON = "https://raw.githubusercontent.com/RoboticaParana/monitor-arduino/main/version.json"
-MONITOR_VERSION_EMBUTIDA = "7.4.9"
+MONITOR_VERSION_EMBUTIDA = "7.4.10"
 
 def registrar_log(mensagem):
     try:
@@ -27,7 +27,7 @@ def verificar_e_atualizar():
 
         res = requests.get(URL_VERSION_JSON, timeout=20)
         if res.status_code == 200:
-            data = res.json()
+            data = json.loads(res.content.decode("utf-8-sig"))
             if data["version"] != v_local:
                 registrar_log(f"Atualizacao encontrada: local={v_local} remoto={data['version']}")
                 r = requests.get(data["url"], timeout=30)

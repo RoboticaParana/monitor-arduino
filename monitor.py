@@ -1,11 +1,11 @@
-﻿
+
 import os, time, requests, socket, uuid, psutil, threading, json, sys
 from datetime import datetime
 from PIL import Image
 import pystray
 import tkinter as tk
 
-VERSION = "7.4.9"
+VERSION = "7.4.10"
 ADMIN_PASS = "robotic@p@r@n@" 
 URL_PLANILHA = "https://script.google.com/macros/s/AKfycbxDiys_7p3BFqwuq-GJ-pe_Fn0q6cIiVCBkXwKTp2Ft5Mqkud6nFeMCdR3DYsbu49XB/exec" # COLE AQUI A MESMA URL DA EXTENSÃƒO
 
