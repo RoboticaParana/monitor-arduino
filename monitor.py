@@ -5,9 +5,9 @@ from PIL import Image
 import pystray
 import tkinter as tk
 
-VERSION = "7.4.16"
+VERSION = "7.4.17"
 ADMIN_PASS = "robotic@p@r@n@" 
-URL_PLANILHA = "https://script.google.com/macros/s/AKfycbxDiys_7p3BFqwuq-GJ-pe_Fn0q6cIiVCBkXwKTp2Ft5Mqkud6nFeMCdR3DYsbu49XB/exec" # COLE AQUI A MESMA URL DA EXTENSÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢O
+URL_PLANILHA = "https://script.google.com/macros/s/AKfycbxDiys_7p3BFqwuq-GJ-pe_Fn0q6cIiVCBkXwKTp2Ft5Mqkud6nFeMCdR3DYsbu49XB/exec" # COLE AQUI A MESMA URL DA EXTENSÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢O
 
 
 # Em build --onefile, __file__ pode apontar para uma pasta temporaria do PyInstaller.
@@ -37,7 +37,8 @@ APP_PROCESSOS = {
 UPLOAD_PROCESSOS_LOWER = {k.lower(): v for k, v in UPLOAD_PROCESSOS.items()}
 APP_PROCESSOS_LOWER = {k.lower(): v for k, v in APP_PROCESSOS.items()}
 ULTIMO_UPLOAD_MBLOCK_ARQUIVO = 0
-DIAGNOSTICO_MBLOCK = True
+ULTIMO_SERIAL_MBLOCK = 0
+DIAGNOSTICO_MBLOCK = False
 DIAG_ASSINATURAS_MBLOCK = (
     "mblock",
     "makeblock",
@@ -132,11 +133,16 @@ def mblock_esta_aberto():
     return False
 
 def registrar_diagnostico_mblock(proc, cmdline, vistos):
-    if not DIAGNOSTICO_MBLOCK or not mblock_esta_aberto():
+    global ULTIMO_SERIAL_MBLOCK
+    if not mblock_esta_aberto():
         return
     pid = proc.info.get('pid')
     nome = proc.info.get('name') or ""
     cmd_texto = " ".join(cmdline or [])
+    if "serialportchildprocess.js" in cmd_texto.lower():
+        ULTIMO_SERIAL_MBLOCK = time.time()
+    if not DIAGNOSTICO_MBLOCK:
+        return
     assinatura = f"{pid}:{nome}:{cmd_texto[:200]}"
     if assinatura in vistos:
         return
@@ -146,7 +152,7 @@ def registrar_diagnostico_mblock(proc, cmdline, vistos):
         vistos.add(assinatura)
 
 def registrar_diagnostico_arquivos_mblock(arquivos_vistos):
-    if not DIAGNOSTICO_MBLOCK or not mblock_esta_aberto():
+    if not mblock_esta_aberto():
         return
     agora = time.time()
     for base in MBLOCK_DIAG_DIRS:
@@ -170,9 +176,10 @@ def registrar_diagnostico_arquivos_mblock(arquivos_vistos):
                     chave = f"{caminho}:{stat.st_mtime}:{stat.st_size}"
                     if chave in arquivos_vistos:
                         continue
-                    arquivos_vistos.add(chave)
-                    registrar_log(f"DIAG MBLOCK FILE | arquivo={caminho} | bytes={stat.st_size}")
                     detectar_upload_mblock_por_arquivo(caminho, stat)
+                    arquivos_vistos.add(chave)
+                    if DIAGNOSTICO_MBLOCK:
+                        registrar_log(f"DIAG MBLOCK FILE | arquivo={caminho} | bytes={stat.st_size}")
         except Exception as e:
             registrar_log(f"DIAG MBLOCK FILE ERRO | base={base} | {e}")
 
@@ -182,7 +189,9 @@ def detectar_upload_mblock_por_arquivo(caminho, stat):
     agora = time.time()
     if not nome.endswith(".tmp"):
         return
-    if stat.st_size < 100000:
+    if stat.st_size < 1000000:
+        return
+    if agora - ULTIMO_SERIAL_MBLOCK > 20:
         return
     if agora - ULTIMO_UPLOAD_MBLOCK_ARQUIVO < 30:
         return
