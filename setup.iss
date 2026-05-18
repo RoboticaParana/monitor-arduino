@@ -1,12 +1,12 @@
 [Setup]
 AppId={{8B32145A-7C21-4E6E-A52D-1234567890ABC}
 AppName=Agente B1n0
-AppVersion=7.4.13
+AppVersion=7.4.14
 DefaultDirName={localappdata}\AgenteB1n0
 DisableDirPage=yes
 PrivilegesRequired=lowest
 OutputDir=Output
-OutputBaseFilename=Instalador_AgenteB1n0_v7.4.13
+OutputBaseFilename=Instalador_AgenteB1n0_v7.4.14
 SetupIconFile=mascote.ico
 Compression=lzma
 SolidCompression=yes

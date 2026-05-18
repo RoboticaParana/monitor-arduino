@@ -5,9 +5,9 @@ from PIL import Image
 import pystray
 import tkinter as tk
 
-VERSION = "7.4.13"
+VERSION = "7.4.14"
 ADMIN_PASS = "robotic@p@r@n@" 
-URL_PLANILHA = "https://script.google.com/macros/s/AKfycbxDiys_7p3BFqwuq-GJ-pe_Fn0q6cIiVCBkXwKTp2Ft5Mqkud6nFeMCdR3DYsbu49XB/exec" # COLE AQUI A MESMA URL DA EXTENSÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢O
+URL_PLANILHA = "https://script.google.com/macros/s/AKfycbxDiys_7p3BFqwuq-GJ-pe_Fn0q6cIiVCBkXwKTp2Ft5Mqkud6nFeMCdR3DYsbu49XB/exec" # COLE AQUI A MESMA URL DA EXTENSÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢O
 
 
 # Em build --onefile, __file__ pode apontar para uma pasta temporaria do PyInstaller.
@@ -36,6 +36,21 @@ APP_PROCESSOS = {
 }
 UPLOAD_PROCESSOS_LOWER = {k.lower(): v for k, v in UPLOAD_PROCESSOS.items()}
 APP_PROCESSOS_LOWER = {k.lower(): v for k, v in APP_PROCESSOS.items()}
+DIAGNOSTICO_MBLOCK = True
+DIAG_ASSINATURAS_MBLOCK = (
+    "mblock",
+    "makeblock",
+    "upload",
+    "flash",
+    "firmware",
+    "serial",
+    "avrdude",
+    "esptool",
+    "bossac",
+    "dfu",
+    "node",
+    "python",
+)
 
 def registrar_log(mensagem):
     try:
@@ -101,6 +116,29 @@ def descrever_contexto_app():
     except Exception:
         return "Aplicativo nao identificado"
 
+def mblock_esta_aberto():
+    try:
+        for proc in psutil.process_iter(['name']):
+            if (proc.info.get('name') or "").lower() == "mblock.exe":
+                return True
+    except Exception:
+        pass
+    return False
+
+def registrar_diagnostico_mblock(proc, cmdline, vistos):
+    if not DIAGNOSTICO_MBLOCK or not mblock_esta_aberto():
+        return
+    pid = proc.info.get('pid')
+    nome = proc.info.get('name') or ""
+    cmd_texto = " ".join(cmdline or [])
+    assinatura = f"{pid}:{nome}:{cmd_texto[:200]}"
+    if assinatura in vistos:
+        return
+    texto = f"{nome} {cmd_texto}".lower()
+    if any(item in texto for item in DIAG_ASSINATURAS_MBLOCK):
+        registrar_log(f"DIAG MBLOCK | processo={nome} | cmd={cmd_texto[:500]}")
+        vistos.add(assinatura)
+
 def identificar_upload(nome, cmdline):
     nome_lower = (nome or "").lower()
     cmd_lower = " ".join(cmdline or []).lower()
@@ -128,6 +166,7 @@ def normalizar_origem(plataforma_upload, cmdline):
 def loop_principal():
     ultimo_envio = {}
     ultimo_evento = {}
+    diagnosticos_vistos = set()
     registrar_log(f"AGENTE B1N0 INICIADO - v{VERSION}")
     while True:
         try:
@@ -137,6 +176,7 @@ def loop_principal():
                     cmdline = proc.info.get('cmdline') or []
                 except (psutil.AccessDenied, psutil.NoSuchProcess):
                     continue
+                registrar_diagnostico_mblock(proc, cmdline, diagnosticos_vistos)
                 plataforma_upload = identificar_upload(nome, cmdline)
                 if plataforma_upload:
                     agora = time.time()
