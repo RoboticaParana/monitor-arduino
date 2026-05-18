@@ -1,44 +1,113 @@
 @echo off
-title BUILDER B1N0 v7.2
+title BUILDER B1N0
 color 0B
 chcp 65001 >nul
 setlocal EnableDelayedExpansion
 cd /d %~dp0
 
 :: BUSCA DO INNO SETUP
-set INNO=""
-for %%G in (
-    "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" 
-    "%LocalAppData%\Programs\Inno Setup 6\ISCC.exe"
-    "C:\Program Files\Inno Setup 6\ISCC.exe"
-) do (if exist %%G set INNO=%%G)
-
-set VERSAO=7.2
-
-echo [1/3] Sincronizando GitHub v!VERSAO!...
-echo {"version": "!VERSAO!", "url": "https://github.com/RoboticaParana/monitor-arduino/releases/download/v!VERSAO!/monitor.exe"} > version.json
-git add .
-git commit -m "Nova Versao Baseada na Estabilidade (v!VERSAO!)" >nul 2>&1
-git push origin main --force
-
-echo [2/3] Compilando EXE...
-rmdir /s /q build dist 2>nul
-python -m PyInstaller --onedir --noconsole --clean --icon=mascote.ico --add-data "mascote.ico;." monitor.py
-copy /y "dist\monitor\monitor.exe" "dist\monitor.exe" >nul
-
-echo [3/3] Criando Instalador e Release...
-if not exist "Output" mkdir "Output"
-if %INNO% == "" (
-    echo [ERRO] Inno Setup nao encontrado!
-) else (
-    %INNO% setup.iss /Q
+set "INNO="
+for %%G in ("C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "C:\Program Files\Inno Setup 6\ISCC.exe" "%LocalAppData%\Programs\Inno Setup 6\ISCC.exe") do (
+    if exist "%%~G" set "INNO=%%~G"
 )
 
-:: Comando de release sem flags incompativeis
-gh release create v!VERSAO! "./dist/monitor.exe" "./Output/Instalador_AgenteB1n0_v!VERSAO!.exe" --title "v!VERSAO!" --notes "Nova build v!VERSAO! (Base v5.1)" --latest
+echo [0/6] Atualizando versao...
+for /f "usebackq delims=" %%V in (`powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0bump_version.ps1"`) do set "VERSAO=%%V"
+if not defined VERSAO (
+    echo ERRO CRITICO: Falha ao atualizar versao.
+    pause
+    exit /b 1
+)
+title BUILDER B1N0 v!VERSAO!
+echo Nova versao: v!VERSAO!
+echo.
+
+echo [1/6] Limpando pastas antigas...
+rmdir /s /q build dist 2>nul
+
+echo [2/6] Instalando dependencias necessarias...
+pip install requests psutil pystray pillow pyinstaller --upgrade --quiet
+if errorlevel 1 (
+    echo ERRO CRITICO: Falha ao instalar dependencias.
+    pause
+    exit /b 1
+)
+
+echo [3/6] Compilando Agente (Monitor)...
+python -m PyInstaller --clean --onefile --noconsole --icon=mascote.ico --add-data "mascote.ico;." monitor.py
+if errorlevel 1 (
+    echo ERRO CRITICO: PyInstaller falhou ao compilar monitor.py
+    pause
+    exit /b 1
+)
+if not exist "dist\monitor.exe" (
+    echo ERRO CRITICO: Falha ao compilar monitor.py
+    pause
+    exit /b 1
+)
+
+echo [4/6] Compilando Gerenciador (Manager)...
+python -m PyInstaller --clean --onefile --noconsole --icon=mascote.ico manager.py
+if errorlevel 1 (
+    echo ERRO CRITICO: PyInstaller falhou ao compilar manager.py
+    pause
+    exit /b 1
+)
+if not exist "dist\manager.exe" (
+    echo ERRO CRITICO: Falha ao compilar manager.py
+    pause
+    exit /b 1
+)
+
+echo [5/6] Gerando Instalador Final...
+if defined INNO (
+    "!INNO!" setup.iss
+    if errorlevel 1 (
+        echo ERRO CRITICO: Falha ao gerar instalador.
+        pause
+        exit /b 1
+    )
+) else (
+    echo ERRO: Inno Setup nao encontrado!
+    pause
+    exit /b 1
+)
+
+echo [6/6] Publicando no GitHub...
+git add monitor.py manager.py setup.iss version.json build.bat bump_version.ps1 .gitignore
+if errorlevel 1 (
+    echo ERRO CRITICO: Falha ao preparar arquivos para commit.
+    pause
+    exit /b 1
+)
+
+git commit -m "Build v!VERSAO!"
+if errorlevel 1 (
+    echo ERRO CRITICO: Falha ao criar commit.
+    pause
+    exit /b 1
+)
+
+git push origin main
+if errorlevel 1 (
+    echo ERRO CRITICO: Falha ao enviar commit para o GitHub.
+    pause
+    exit /b 1
+)
+
+gh release view "v!VERSAO!" >nul 2>nul
+if errorlevel 1 (
+    gh release create "v!VERSAO!" "dist\monitor.exe#monitor.exe" "Output\Instalador_AgenteB1n0_v!VERSAO!.exe#Instalador_AgenteB1n0_v!VERSAO!.exe" --title "v!VERSAO!" --notes "Build v!VERSAO!" --latest
+) else (
+    gh release upload "v!VERSAO!" "dist\monitor.exe#monitor.exe" "Output\Instalador_AgenteB1n0_v!VERSAO!.exe#Instalador_AgenteB1n0_v!VERSAO!.exe" --clobber
+)
+if errorlevel 1 (
+    echo ERRO CRITICO: Falha ao criar ou atualizar Release no GitHub.
+    pause
+    exit /b 1
+)
 
 echo.
-echo ======================================================
-echo PROCESSO v!VERSAO! FINALIZADO!
-echo ======================================================
+echo Build v!VERSAO! finalizado.
+echo Publicado no GitHub Release v!VERSAO!.
 pause
