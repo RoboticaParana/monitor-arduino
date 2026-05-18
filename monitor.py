@@ -5,9 +5,9 @@ from PIL import Image
 import pystray
 import tkinter as tk
 
-VERSION = "7.4.12"
+VERSION = "7.4.13"
 ADMIN_PASS = "robotic@p@r@n@" 
-URL_PLANILHA = "https://script.google.com/macros/s/AKfycbxDiys_7p3BFqwuq-GJ-pe_Fn0q6cIiVCBkXwKTp2Ft5Mqkud6nFeMCdR3DYsbu49XB/exec" # COLE AQUI A MESMA URL DA EXTENSÃƒÆ’Ã†â€™O
+URL_PLANILHA = "https://script.google.com/macros/s/AKfycbxDiys_7p3BFqwuq-GJ-pe_Fn0q6cIiVCBkXwKTp2Ft5Mqkud6nFeMCdR3DYsbu49XB/exec" # COLE AQUI A MESMA URL DA EXTENSÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢O
 
 
 # Em build --onefile, __file__ pode apontar para uma pasta temporaria do PyInstaller.
@@ -21,7 +21,6 @@ UPLOAD_PROCESSOS = {
     "bossac.exe": "Arduino/SAMD",
     "dfu-util.exe": "DFU",
     "openocd.exe": "OpenOCD",
-    "mbuild.exe": "mBlock",
 }
 UPLOAD_ASSINATURAS_FORTES = {
     "avrdude": "Arduino/AVR",
@@ -29,7 +28,6 @@ UPLOAD_ASSINATURAS_FORTES = {
     "bossac": "Arduino/SAMD",
     "dfu-util": "DFU",
     "openocd": "OpenOCD",
-    "mblock": "mBlock",
 }
 APP_PROCESSOS = {
     "arduino.exe": "Arduino IDE",
@@ -129,6 +127,7 @@ def normalizar_origem(plataforma_upload, cmdline):
 
 def loop_principal():
     ultimo_envio = {}
+    ultimo_evento = {}
     registrar_log(f"AGENTE B1N0 INICIADO - v{VERSION}")
     while True:
         try:
@@ -146,10 +145,15 @@ def loop_principal():
                         cmd_texto = " ".join(cmdline)
                         placa = identificar_placa(cmdline)
                         origem = normalizar_origem(plataforma_upload, cmdline)
+                        chave_evento = f"{origem}:{placa}"
+                        if chave_evento in ultimo_evento and (agora - ultimo_evento[chave_evento] < 20):
+                            ultimo_envio[chave] = agora
+                            continue
                         detalhe = f"ip_local={obter_ip_local()}; origem={origem}; placa={placa}; processo={nome}"
                         enviar_para_planilha("UPLOAD", origem, detalhe, placa)
                         registrar_log(f"UPLOAD | ip_local={obter_ip_local()} | origem={origem} | placa={placa}")
                         ultimo_envio[chave] = agora
+                        ultimo_evento[chave_evento] = agora
             time.sleep(1)
         except Exception as e:
             registrar_log(f"ERRO LOOP: {e}")
