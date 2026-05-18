@@ -34,29 +34,33 @@ if errorlevel 1 (
 )
 
 echo [3/6] Compilando Agente (Monitor)...
-python -m PyInstaller --clean --onefile --noconsole --icon=mascote.ico --add-data "mascote.ico;." monitor.py
+python -m PyInstaller --clean --onedir --noconsole --icon=mascote.ico --add-data "mascote.ico;." monitor.py
 if errorlevel 1 (
     echo ERRO CRITICO: PyInstaller falhou ao compilar monitor.py
     pause
     exit /b 1
 )
 if not exist "dist\monitor.exe" (
-    echo ERRO CRITICO: Falha ao compilar monitor.py
-    pause
-    exit /b 1
+    if not exist "dist\monitor\monitor.exe" (
+        echo ERRO CRITICO: Falha ao compilar monitor.py
+        pause
+        exit /b 1
+    )
 )
 
 echo [4/6] Compilando Gerenciador (Manager)...
-python -m PyInstaller --clean --onefile --noconsole --icon=mascote.ico manager.py
+python -m PyInstaller --clean --onedir --noconsole --icon=mascote.ico manager.py
 if errorlevel 1 (
     echo ERRO CRITICO: PyInstaller falhou ao compilar manager.py
     pause
     exit /b 1
 )
 if not exist "dist\manager.exe" (
-    echo ERRO CRITICO: Falha ao compilar manager.py
-    pause
-    exit /b 1
+    if not exist "dist\manager\manager.exe" (
+        echo ERRO CRITICO: Falha ao compilar manager.py
+        pause
+        exit /b 1
+    )
 )
 
 echo [5/6] Gerando Instalador Final...
@@ -71,6 +75,14 @@ if defined INNO (
     echo ERRO: Inno Setup nao encontrado!
     pause
     exit /b 1
+)
+
+if not "%PUBLICAR_GITHUB%"=="1" (
+    echo.
+    echo Publicacao no GitHub ignorada. Para publicar, rode:
+    echo set PUBLICAR_GITHUB=1
+    echo build.bat
+    goto fim
 )
 
 echo [6/6] Publicando no GitHub...
@@ -97,9 +109,9 @@ if errorlevel 1 (
 
 gh release view "v!VERSAO!" >nul 2>nul
 if errorlevel 1 (
-    gh release create "v!VERSAO!" "dist\monitor.exe#monitor.exe" "Output\Instalador_AgenteB1n0_v!VERSAO!.exe#Instalador_AgenteB1n0_v!VERSAO!.exe" --title "v!VERSAO!" --notes "Build v!VERSAO!" --latest
+    gh release create "v!VERSAO!" "dist\monitor\monitor.exe#monitor.exe" "Output\Instalador_AgenteB1n0_v!VERSAO!.exe#Instalador_AgenteB1n0_v!VERSAO!.exe" --title "v!VERSAO!" --notes "Build v!VERSAO!" --latest
 ) else (
-    gh release upload "v!VERSAO!" "dist\monitor.exe#monitor.exe" "Output\Instalador_AgenteB1n0_v!VERSAO!.exe#Instalador_AgenteB1n0_v!VERSAO!.exe" --clobber
+    gh release upload "v!VERSAO!" "dist\monitor\monitor.exe#monitor.exe" "Output\Instalador_AgenteB1n0_v!VERSAO!.exe#Instalador_AgenteB1n0_v!VERSAO!.exe" --clobber
 )
 if errorlevel 1 (
     echo ERRO CRITICO: Falha ao criar ou atualizar Release no GitHub.
@@ -108,6 +120,7 @@ if errorlevel 1 (
 )
 
 echo.
+:fim
 echo Build v!VERSAO! finalizado.
-echo Publicado no GitHub Release v!VERSAO!.
+if "%PUBLICAR_GITHUB%"=="1" echo Publicado no GitHub Release v!VERSAO!.
 pause
