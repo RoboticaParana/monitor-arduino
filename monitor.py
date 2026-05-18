@@ -5,9 +5,9 @@ from PIL import Image
 import pystray
 import tkinter as tk
 
-VERSION = "7.4.11"
+VERSION = "7.4.12"
 ADMIN_PASS = "robotic@p@r@n@" 
-URL_PLANILHA = "https://script.google.com/macros/s/AKfycbxDiys_7p3BFqwuq-GJ-pe_Fn0q6cIiVCBkXwKTp2Ft5Mqkud6nFeMCdR3DYsbu49XB/exec" # COLE AQUI A MESMA URL DA EXTENSÃƒÆ’O
+URL_PLANILHA = "https://script.google.com/macros/s/AKfycbxDiys_7p3BFqwuq-GJ-pe_Fn0q6cIiVCBkXwKTp2Ft5Mqkud6nFeMCdR3DYsbu49XB/exec" # COLE AQUI A MESMA URL DA EXTENSÃƒÆ’Ã†â€™O
 
 
 # Em build --onefile, __file__ pode apontar para uma pasta temporaria do PyInstaller.
@@ -80,8 +80,7 @@ def enviar_para_planilha(evento, plataforma, detalhe="", placa="Nao identificada
         "versao_agente": VERSION
     }
     try:
-        response = requests.post(URL_PLANILHA, data=json.dumps(dados), headers={'Content-Type':'application/json'}, timeout=15)
-        registrar_log(f"ENVIO {evento} | {plataforma} | HTTP {response.status_code} | {detalhe}")
+        requests.post(URL_PLANILHA, data=json.dumps(dados), headers={'Content-Type':'application/json'}, timeout=15)
     except Exception as e:
         registrar_log(f"FALHA ENVIO {evento} | {plataforma} | {e}")
 
@@ -89,7 +88,7 @@ def identificar_placa(cmdline):
     cmd_lower = " ".join(cmdline or []).lower()
     if "esp01" in cmd_lower or "esp-01" in cmd_lower or "generic:esp8266" in cmd_lower or "esp8266" in cmd_lower or " esptool" in f" {cmd_lower} ":
         return "ESP-01/ESP8266"
-    if "arduino:avr:uno" in cmd_lower or " atmega328p" in f" {cmd_lower} ":
+    if "arduino:avr:uno" in cmd_lower or "atmega328p" in cmd_lower or "m328p" in cmd_lower:
         return "Arduino Uno"
     return "Nao identificada"
 
@@ -119,14 +118,26 @@ def identificar_upload(nome, cmdline):
             return plataforma
     return None
 
+def normalizar_origem(plataforma_upload, cmdline):
+    contexto = descrever_contexto_app()
+    cmd_lower = " ".join(cmdline or []).lower()
+    if "mblock" in contexto.lower() or "mblock" in cmd_lower:
+        return "mBlock"
+    if "arduino ide" in contexto.lower() or "arduino" in cmd_lower or plataforma_upload in ("Arduino/AVR", "Arduino/SAMD", "Arduino IDE"):
+        return "Arduino IDE"
+    return plataforma_upload
+
 def loop_principal():
     ultimo_envio = {}
     registrar_log(f"AGENTE B1N0 INICIADO - v{VERSION}")
     while True:
         try:
             for proc in psutil.process_iter(['pid', 'name', 'cmdline']):
-                nome = proc.info.get('name') or ""
-                cmdline = proc.info.get('cmdline') or []
+                try:
+                    nome = proc.info.get('name') or ""
+                    cmdline = proc.info.get('cmdline') or []
+                except (psutil.AccessDenied, psutil.NoSuchProcess):
+                    continue
                 plataforma_upload = identificar_upload(nome, cmdline)
                 if plataforma_upload:
                     agora = time.time()
@@ -134,11 +145,12 @@ def loop_principal():
                     if chave not in ultimo_envio or (agora - ultimo_envio[chave] > 30):
                         cmd_texto = " ".join(cmdline)
                         placa = identificar_placa(cmdline)
-                        detalhe = f"ip_local={obter_ip_local()}; origem={plataforma_upload}; placa={placa}; processo={nome}"
-                        enviar_para_planilha("UPLOAD", plataforma_upload, detalhe, placa)
-                        registrar_log(f"UPLOAD | ip_local={obter_ip_local()} | origem={plataforma_upload} | placa={placa}")
+                        origem = normalizar_origem(plataforma_upload, cmdline)
+                        detalhe = f"ip_local={obter_ip_local()}; origem={origem}; placa={placa}; processo={nome}"
+                        enviar_para_planilha("UPLOAD", origem, detalhe, placa)
+                        registrar_log(f"UPLOAD | ip_local={obter_ip_local()} | origem={origem} | placa={placa}")
                         ultimo_envio[chave] = agora
-            time.sleep(10)
+            time.sleep(1)
         except Exception as e:
             registrar_log(f"ERRO LOOP: {e}")
             time.sleep(15)
