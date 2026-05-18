@@ -5,9 +5,9 @@ from PIL import Image
 import pystray
 import tkinter as tk
 
-VERSION = "7.4.14"
+VERSION = "7.4.15"
 ADMIN_PASS = "robotic@p@r@n@" 
-URL_PLANILHA = "https://script.google.com/macros/s/AKfycbxDiys_7p3BFqwuq-GJ-pe_Fn0q6cIiVCBkXwKTp2Ft5Mqkud6nFeMCdR3DYsbu49XB/exec" # COLE AQUI A MESMA URL DA EXTENSÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢O
+URL_PLANILHA = "https://script.google.com/macros/s/AKfycbxDiys_7p3BFqwuq-GJ-pe_Fn0q6cIiVCBkXwKTp2Ft5Mqkud6nFeMCdR3DYsbu49XB/exec" # COLE AQUI A MESMA URL DA EXTENSÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢O
 
 
 # Em build --onefile, __file__ pode apontar para uma pasta temporaria do PyInstaller.
@@ -51,6 +51,11 @@ DIAG_ASSINATURAS_MBLOCK = (
     "node",
     "python",
 )
+MBLOCK_DIAG_DIRS = [
+    os.path.join(os.environ.get("APPDATA", ""), "mblock"),
+    os.environ.get("TEMP", ""),
+]
+MBLOCK_DIAG_EXTS = (".hex", ".bin", ".ino", ".json", ".tmp", ".log")
 
 def registrar_log(mensagem):
     try:
@@ -139,6 +144,36 @@ def registrar_diagnostico_mblock(proc, cmdline, vistos):
         registrar_log(f"DIAG MBLOCK | processo={nome} | cmd={cmd_texto[:500]}")
         vistos.add(assinatura)
 
+def registrar_diagnostico_arquivos_mblock(arquivos_vistos):
+    if not DIAGNOSTICO_MBLOCK or not mblock_esta_aberto():
+        return
+    agora = time.time()
+    for base in MBLOCK_DIAG_DIRS:
+        if not base or not os.path.exists(base):
+            continue
+        try:
+            for raiz, _, arquivos in os.walk(base):
+                if "cache" in raiz.lower() and "mblock" not in raiz.lower():
+                    continue
+                for arquivo in arquivos:
+                    caminho = os.path.join(raiz, arquivo)
+                    nome_lower = arquivo.lower()
+                    if not (nome_lower.endswith(MBLOCK_DIAG_EXTS) or "upload" in nome_lower or "firmware" in nome_lower):
+                        continue
+                    try:
+                        stat = os.stat(caminho)
+                    except OSError:
+                        continue
+                    if agora - stat.st_mtime > 8:
+                        continue
+                    chave = f"{caminho}:{stat.st_mtime}:{stat.st_size}"
+                    if chave in arquivos_vistos:
+                        continue
+                    arquivos_vistos.add(chave)
+                    registrar_log(f"DIAG MBLOCK FILE | arquivo={caminho} | bytes={stat.st_size}")
+        except Exception as e:
+            registrar_log(f"DIAG MBLOCK FILE ERRO | base={base} | {e}")
+
 def identificar_upload(nome, cmdline):
     nome_lower = (nome or "").lower()
     cmd_lower = " ".join(cmdline or []).lower()
@@ -167,6 +202,7 @@ def loop_principal():
     ultimo_envio = {}
     ultimo_evento = {}
     diagnosticos_vistos = set()
+    arquivos_mblock_vistos = set()
     registrar_log(f"AGENTE B1N0 INICIADO - v{VERSION}")
     while True:
         try:
@@ -194,6 +230,7 @@ def loop_principal():
                         registrar_log(f"UPLOAD | ip_local={obter_ip_local()} | origem={origem} | placa={placa}")
                         ultimo_envio[chave] = agora
                         ultimo_evento[chave_evento] = agora
+            registrar_diagnostico_arquivos_mblock(arquivos_mblock_vistos)
             time.sleep(1)
         except Exception as e:
             registrar_log(f"ERRO LOOP: {e}")
