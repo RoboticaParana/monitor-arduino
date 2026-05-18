@@ -5,9 +5,9 @@ from PIL import Image
 import pystray
 import tkinter as tk
 
-VERSION = "7.4.15"
+VERSION = "7.4.16"
 ADMIN_PASS = "robotic@p@r@n@" 
-URL_PLANILHA = "https://script.google.com/macros/s/AKfycbxDiys_7p3BFqwuq-GJ-pe_Fn0q6cIiVCBkXwKTp2Ft5Mqkud6nFeMCdR3DYsbu49XB/exec" # COLE AQUI A MESMA URL DA EXTENSÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢O
+URL_PLANILHA = "https://script.google.com/macros/s/AKfycbxDiys_7p3BFqwuq-GJ-pe_Fn0q6cIiVCBkXwKTp2Ft5Mqkud6nFeMCdR3DYsbu49XB/exec" # COLE AQUI A MESMA URL DA EXTENSÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢O
 
 
 # Em build --onefile, __file__ pode apontar para uma pasta temporaria do PyInstaller.
@@ -36,6 +36,7 @@ APP_PROCESSOS = {
 }
 UPLOAD_PROCESSOS_LOWER = {k.lower(): v for k, v in UPLOAD_PROCESSOS.items()}
 APP_PROCESSOS_LOWER = {k.lower(): v for k, v in APP_PROCESSOS.items()}
+ULTIMO_UPLOAD_MBLOCK_ARQUIVO = 0
 DIAGNOSTICO_MBLOCK = True
 DIAG_ASSINATURAS_MBLOCK = (
     "mblock",
@@ -171,8 +172,25 @@ def registrar_diagnostico_arquivos_mblock(arquivos_vistos):
                         continue
                     arquivos_vistos.add(chave)
                     registrar_log(f"DIAG MBLOCK FILE | arquivo={caminho} | bytes={stat.st_size}")
+                    detectar_upload_mblock_por_arquivo(caminho, stat)
         except Exception as e:
             registrar_log(f"DIAG MBLOCK FILE ERRO | base={base} | {e}")
+
+def detectar_upload_mblock_por_arquivo(caminho, stat):
+    global ULTIMO_UPLOAD_MBLOCK_ARQUIVO
+    nome = os.path.basename(caminho).lower()
+    agora = time.time()
+    if not nome.endswith(".tmp"):
+        return
+    if stat.st_size < 100000:
+        return
+    if agora - ULTIMO_UPLOAD_MBLOCK_ARQUIVO < 30:
+        return
+    placa = "Nao identificada"
+    detalhe = f"ip_local={obter_ip_local()}; origem=mBlock; placa={placa}; arquivo_tmp={nome}; bytes={stat.st_size}"
+    enviar_para_planilha("UPLOAD", "mBlock", detalhe, placa)
+    registrar_log(f"UPLOAD | ip_local={obter_ip_local()} | origem=mBlock | placa={placa}")
+    ULTIMO_UPLOAD_MBLOCK_ARQUIVO = agora
 
 def identificar_upload(nome, cmdline):
     nome_lower = (nome or "").lower()
